@@ -1,11 +1,34 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "./", // or "/"
+  base: "./", // Ensure correct base path
   build: {
-    outDir: "dist",
+    outDir: "dist", // Output folder
+    rollupOptions: {
+      output: {
+        entryFileNames: `[name].[hash].js`, // Ensure JS files have the .js extension
+        chunkFileNames: `[name].[hash].js`,
+        assetFileNames: `[name].[hash].[ext]`,
+      },
+    },
+  },
+  server: {
+    mimeTypes: {
+      "application/javascript": ["js"],
+    },
   },
 });
+
+// import { defineConfig } from "vite";
+// import react from "@vitejs/plugin-react";
+
+// // https://vite.dev/config/
+// export default defineConfig({
+//   plugins: [react()],
+//   base: "./", // or "/"
+//   build: {
+//     outDir: "dist",
+//   },
+// });
