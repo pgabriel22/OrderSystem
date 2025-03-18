@@ -4,7 +4,15 @@ import Combo from "../assets/fire.png";
 import "./OrderColumn.css";
 import OrderCard from "./OrderCard";
 
-const TaskColumn = ({ title, icon, order, payment, handleDelete }) => {
+const TaskColumn = ({
+  title,
+  customer,
+  icon,
+  order,
+  orderby,
+  payment,
+  handleDelete,
+}) => {
   return (
     <section className="order_column">
       <h2 className="order_column_heading">
@@ -18,6 +26,7 @@ const TaskColumn = ({ title, icon, order, payment, handleDelete }) => {
             <OrderCard
               key={index}
               title={order.order}
+              customer={order.orderby}
               tags={order.tags}
               handleDelete={handleDelete}
               index={index}
