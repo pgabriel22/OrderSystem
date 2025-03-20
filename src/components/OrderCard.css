@@ -25,6 +25,11 @@
   justify-content: space-between;
 }
 
+.order_ud {
+  display: flex;
+  gap: 5px;
+}
+
 .order_delete {
   width: 35px;
   height: 35px;
@@ -48,4 +53,94 @@
 
 .order_delete:hover .delete_icon {
   opacity: 80%;
+}
+
+.order_edit {
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.order_edit:hover {
+  background-color: #ebebeb;
+}
+
+.edit_icon {
+  width: 20px;
+  opacity: 50%;
+  transition: all 0.3s ease-in-out;
+}
+
+.order_edit:hover .edit_icon {
+  opacity: 80%;
+}
+
+.order_edit_update {
+  width: 70px;
+  height: 35px;
+  border-radius: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  background-color: #64d05c;
+  border-color: #edf3f4;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  color: #ffffff;
+}
+
+.order_edit_update:hover {
+  background-color: #edf3f4;
+  border-color: #64d05c;
+  color: #000;
+}
+
+.order_edit_cancel {
+  width: 70px;
+  height: 35px;
+  border-radius: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  background-color: #f63823;
+  border-color: #edf3f4;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  color: #ffffff;
+}
+
+.order_edit_cancel:hover {
+  background-color: #edf3f4;
+  border-color: #f63823;
+  color: #000;
+}
+
+.order_update_input {
+  font-size: 20px;
+  font-weight: 500;
+  background: #f9f9f9;
+  color: #000;
+  border: 1px solid #dfe3e6;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.order_update_input::placeholder {
+  color: #686868;
 }

@@ -1,22 +1,25 @@
 import React from "react";
-import Combo from "../assets/fire.png";
 
 import "./OrderColumn.css";
 import OrderCard from "./OrderCard";
 
 const TaskColumn = ({
   title,
-  customer,
   icon,
   order,
-  orderby,
   payment,
+  handleEdit,
+  handleUpdate,
+  handleCancel,
   handleDelete,
+  isEditing,
+  tempOrder,
+  setTempOrder,
 }) => {
   return (
     <section className="order_column">
       <h2 className="order_column_heading">
-        <img className="order_column_icon" src={icon} alt="Combo meal 129" />
+        <img className="order_column_icon" src={icon} />
         {title}
       </h2>
 
@@ -28,7 +31,13 @@ const TaskColumn = ({
               title={order.order}
               customer={order.orderby}
               tags={order.tags}
+              handleEdit={handleEdit}
+              handleUpdate={handleUpdate}
+              handleCancel={handleCancel}
               handleDelete={handleDelete}
+              isEditing={isEditing}
+              tempOrder={tempOrder}
+              setTempOrder={setTempOrder}
               index={index}
             />
           )

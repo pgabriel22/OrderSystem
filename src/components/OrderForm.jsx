@@ -38,8 +38,11 @@ const OrderForm = ({ setOrders }) => {
   };
 
   const handleSubmit = (e) => {
+    if (orderData.tags.length === 0) {
+      alert("Please select at least one tag.");
+    }
     e.preventDefault();
-    console.log("Order Submitted:", orderData);
+    // console.log("Order Submitted:", orderData);
     setOrders((prev) => {
       return [...prev, orderData];
     });
@@ -65,6 +68,7 @@ const OrderForm = ({ setOrders }) => {
           className="order_input"
           placeholder="Enter your name"
           onChange={handleChange}
+          required
         ></input>
         <input
           name="order"
@@ -73,6 +77,7 @@ const OrderForm = ({ setOrders }) => {
           className="order_input"
           placeholder="Enter order"
           onChange={handleChange}
+          required
         ></input>
         <div className="order_form_bottom_line">
           <div>
@@ -104,6 +109,7 @@ const OrderForm = ({ setOrders }) => {
               className="payment"
               value={orderData.payment}
               onChange={handleChange}
+              required
             >
               <option value="" disabled hidden>
                 Select Payment Method
