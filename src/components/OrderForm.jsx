@@ -38,10 +38,12 @@ const OrderForm = ({ setOrders }) => {
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+
     if (orderData.tags.length === 0) {
       alert("Please select at least one tag.");
+      return;
     }
-    e.preventDefault();
     // console.log("Order Submitted:", orderData);
     setOrders((prev) => {
       return [...prev, orderData];

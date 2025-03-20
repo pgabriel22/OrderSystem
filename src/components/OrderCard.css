@@ -83,7 +83,7 @@
 .order_edit_update {
   width: 70px;
   height: 35px;
-  border-radius: 30%;
+  border-radius: 20%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,7 +107,7 @@
 .order_edit_cancel {
   width: 70px;
   height: 35px;
-  border-radius: 30%;
+  border-radius: 20%;
   display: flex;
   align-items: center;
   justify-content: center;

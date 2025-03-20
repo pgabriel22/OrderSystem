@@ -35,6 +35,10 @@ const App = () => {
   };
 
   const handleUpdate = () => {
+    if (!tempOrder.order.trim() || tempOrder.tags.length === 0) {
+      alert("Please fill the fields and select atleast one tag.");
+      return;
+    }
     const updatedOrder = [...order];
     updatedOrder[isEditing] = tempOrder;
     setOrders(updatedOrder);
@@ -42,7 +46,7 @@ const App = () => {
     localStorage.setItem("order", JSON.stringify(updatedOrder));
   };
 
-  console.log("order", order);
+  // console.log("order", order);
   return (
     <div className="app">
       <OrderForm setOrders={setOrders} />

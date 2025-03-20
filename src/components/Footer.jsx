@@ -1,8 +1,8 @@
 import React from "react";
-import "./Footer.css"; // Optional for styling
+import "./Footer.css";
 
 const Footer = () => {
-  const version = "1.0.0"; // Replace with your app version
+  const version = "1.0.0";
 
   return (
     <footer className="app_footer">
