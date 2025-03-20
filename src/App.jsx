@@ -6,6 +6,7 @@ import OrderColumn from "./components/OrderColumn";
 import comboIcon from "./assets/cash.png";
 import singleIcon from "./assets/gcash.png";
 import othersIcon from "./assets/banktransfer.png";
+import Footer from "./components/Footer";
 
 const oldOrders = localStorage.getItem("order");
 console.log(oldOrders);
@@ -86,6 +87,7 @@ const App = () => {
           setTempOrder={setTempOrder}
         />
       </main>
+      <Footer />
     </div>
   );
 };

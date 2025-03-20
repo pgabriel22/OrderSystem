@@ -1,9 +1,11 @@
 .app {
-  display: grid;
-  grid-template-rows: 150 px auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .app_main {
+  flex: 1;
   display: flex;
   justify-content: space-evenly;
   padding: 20px 8%;
