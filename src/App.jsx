@@ -9,7 +9,7 @@ import othersIcon from "./assets/banktransfer.png";
 import Footer from "./components/Footer";
 
 const oldOrders = localStorage.getItem("order");
-console.log(oldOrders);
+// console.log(oldOrders);
 
 const App = () => {
   const [order, setOrders] = useState(JSON.parse(oldOrders) || []);

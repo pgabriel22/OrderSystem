@@ -1,9 +1,9 @@
 import React from "react";
 
 import "./OrderCard.css";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import Tag from "./Tag";
-import deleteIcon from "../assets/delete.png";
-import editIcon from "../assets/edit.jpg";
+import { Save, Edit, Cancel, Delete } from "@mui/icons-material";
 
 const getAllTags = () => ["Combo129", "Single99", "ExtraRice", "Soup"];
 
@@ -11,6 +11,7 @@ const OrderCard = ({
   title,
   customer,
   tags,
+  totalPrice,
   handleDelete,
   index,
   handleEdit,
@@ -50,12 +51,12 @@ const OrderCard = ({
               ))}
             </div>
             <div className="order_ud">
-              <button className="order_edit_update" onClick={handleUpdate}>
-                Update
-              </button>
-              <button className="order_edit_cancel" onClick={handleCancel}>
-                Cancel
-              </button>
+              <IconButton variant="contained" onClick={handleUpdate}>
+                <Save />
+              </IconButton>
+              <IconButton variant="contained" onClick={handleCancel}>
+                <Cancel />
+              </IconButton>
             </div>
           </div>
         </div>
@@ -63,19 +64,28 @@ const OrderCard = ({
         <>
           <p className="order_text">{title}</p>
           <p className="customer_text">Ordered By: {customer}</p>
+          <p className="order_price">Total Price: {totalPrice}</p>
 
           <div className="order_card_bottom_line">
             <div className="order_card_tags">
               {tags.map((tag, idx) => (
-                <Tag key={idx} tagName={tag} selected />
+                <Tag key={idx} tagName={tag.name} selected />
               ))}
             </div>
             <div className="order_ud">
               <div className="order_edit" onClick={() => handleEdit(index)}>
-                <img src={editIcon} className="edit_icon" alt="Edit" />
+                <Tooltip title="Edit">
+                  <IconButton variant="contained">
+                    <Edit />
+                  </IconButton>
+                </Tooltip>
               </div>
               <div className="order_delete" onClick={() => handleDelete(index)}>
-                <img src={deleteIcon} className="delete_icon" alt="Delete" />
+                <Tooltip title="Delete">
+                  <IconButton variant="contained">
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
               </div>
             </div>
           </div>

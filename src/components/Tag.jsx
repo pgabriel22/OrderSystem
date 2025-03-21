@@ -2,7 +2,7 @@ import React from "react";
 
 import "./Tag.css";
 
-const Tag = ({ tagName, selectTag, selected }) => {
+const Tag = ({ tagName, selectTag, selected, price }) => {
   const tagStyle = {
     Combo129: { backgroundColor: "#fda821" },
     Single99: { backgroundColor: "#15d4c8" },
@@ -15,7 +15,7 @@ const Tag = ({ tagName, selectTag, selected }) => {
       type="button"
       className="tag"
       style={selected ? tagStyle[tagName] : tagStyle.default}
-      onClick={() => selectTag(tagName)}
+      onClick={() => selectTag(tagName, price)}
     >
       {tagName}
     </button>

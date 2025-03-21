@@ -27,11 +27,11 @@
 
 .order_ud {
   display: flex;
-  gap: 5px;
+  gap: 10px;
 }
 
-.order_delete {
-  width: 35px;
+/* .order_delete {
+  width: 30px;
   height: 35px;
   border-radius: 100%;
   display: flex;
@@ -43,15 +43,15 @@
 
 .order_delete:hover {
   background-color: #ebebeb;
-}
+} */
 
-.delete_icon {
+/* .delete_icon {
   width: 20px;
   opacity: 50%;
   transition: all 0.3s ease-in-out;
-}
+} */
 
-.order_delete:hover .delete_icon {
+/* .order_delete:hover .delete_icon {
   opacity: 80%;
 }
 
@@ -68,15 +68,15 @@
 
 .order_edit:hover {
   background-color: #ebebeb;
-}
+} */
 
-.edit_icon {
+/* .edit_icon {
   width: 20px;
   opacity: 50%;
   transition: all 0.3s ease-in-out;
-}
+} */
 
-.order_edit:hover .edit_icon {
+/* .order_edit:hover .edit_icon {
   opacity: 80%;
 }
 
@@ -143,4 +143,4 @@
 
 .order_update_input::placeholder {
   color: #686868;
-}
+} */
