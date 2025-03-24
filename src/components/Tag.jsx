@@ -1,24 +1,23 @@
 import React from "react";
+import { Chip, Box } from "@mui/material";
 
 import "./Tag.css";
+import { TagRounded } from "@mui/icons-material";
 
-const Tag = ({ tagName, selectTag, selected, price }) => {
-  const tagStyle = {
-    Combo129: { backgroundColor: "#fda821" },
-    Single99: { backgroundColor: "#15d4c8" },
-    ExtraRice: { backgroundColor: "#ffd12c" },
-    Soup: { backgroundColor: "#4cdafc" },
-    default: { backgroundColor: "#f9f9f9" },
-  };
+const Tag = ({ tags, selectTag, selectedTags }) => {
+  const isSelected = (tag) => selectedTags.some((t) => t.name === tag.name);
   return (
-    <button
-      type="button"
-      className="tag"
-      style={selected ? tagStyle[tagName] : tagStyle.default}
-      onClick={() => selectTag(tagName, price)}
-    >
-      {tagName}
-    </button>
+    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 2 }}>
+      {tags.map((tag) => (
+        <Chip
+          key={tag.name}
+          label={tag.label}
+          onClick={() => selectTag(tag)}
+          color={isSelected(tag) ? "primary" : "default"}
+          sx={{ cursor: "pointer" }}
+        />
+      ))}
+    </Box>
   );
 };
 

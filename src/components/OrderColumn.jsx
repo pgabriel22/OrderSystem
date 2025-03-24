@@ -15,6 +15,7 @@ const TaskColumn = ({
   isEditing,
   tempOrder,
   setTempOrder,
+  totalPrice,
 }) => {
   return (
     <section className="order_column">
@@ -39,6 +40,7 @@ const TaskColumn = ({
               tempOrder={tempOrder}
               setTempOrder={setTempOrder}
               index={index}
+              totalPrice={order.totalPrice}
             />
           )
       )}

@@ -3,8 +3,30 @@ import React, { useState } from "react";
 import "./OrderForm.css";
 import Tag from "./Tag";
 import Chef from "../assets/chef.jpg";
-import { Box, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  FormHelperText,
+  Chip,
+} from "@mui/material";
 import { AddCard } from "@mui/icons-material";
+
+const paymentOptions = [
+  { label: "Cash", value: "cash" },
+  { label: "GCash", value: "gcash" },
+  { label: "Bank Transfer", value: "bank" },
+];
+
+const tags = [
+  { name: "Combo129", label: "Combo 129", price: 129 },
+  { name: "Single99", label: "Single 99", price: 99 },
+  { name: "ExtraRice", label: "Extra Rice", price: 15 },
+];
 
 const OrderForm = ({ setOrders }) => {
   const [orderData, setOrderData] = useState({
@@ -15,34 +37,13 @@ const OrderForm = ({ setOrders }) => {
     totalPrice: 0,
   });
 
-  const [error, setError] = useState(false);
-  const [helperText, setHelperText] = useState("");
+  const [helperText] = useState("");
 
-  const checkTag = (tag) => {
-    return orderData.tags.some((item) => item === tag);
-  };
-
-  const selectTag = (tag, price) => {
-    if (orderData.tags.some((item) => item.name === tag)) {
-      const filterTags = orderData.tags.filter((item) => item.name !== tag);
-      const newTotalPrice = filterTags.reduce((sum, t) => sum + t.price, 0);
-      setOrderData((prev) => {
-        return { ...prev, tags: filterTags, totalPrice: newTotalPrice };
-      });
-    } else {
-      const newTags = [...orderData.tags, { name: tag, price }];
-      const newTotalPrice = newTags.reduce((sum, t) => sum + t.price, 0);
-
-      setOrderData((prev) => ({
-        ...prev,
-        tags: newTags,
-        totalPrice: newTotalPrice,
-      }));
-      // setOrderData((prev) => {
-      //   return { ...prev, tags: [...prev, tags, tag] };
-      // });
-    }
-  };
+  const [formErrors, setFormErrors] = useState({
+    orderby: { error: false, helperText: "" },
+    order: { error: false, helperText: "" },
+    payment: { error: false, helperText: "" },
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,31 +53,82 @@ const OrderForm = ({ setOrders }) => {
     });
   };
 
+  const selectTag = (tag) => {
+    const existingTag = orderData.tags.some((t) => t.name === tag.name);
+
+    const updateTags = existingTag
+      ? orderData.tags.filter((t) => t.name !== tag.name)
+      : [...orderData.tags, tag];
+
+    const priceChange = existingTag ? -tag.price : tag.price;
+
+    setOrderData((prev) => ({
+      ...prev,
+      tags: updateTags,
+      totalPrice: prev.totalPrice + priceChange,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (
-      !orderData.order.trim() ||
-      !orderData.orderby.trim() ||
-      orderData.tags.length === 0
-    ) {
-      alert("Please select at least one tag.");
-      setError(true);
-      setHelperText("This field is required.");
+    let errors = { ...formErrors };
+
+    if (!orderData.orderby.trim()) {
+      errors.orderby = {
+        error: true,
+        helperText: "Customer Name is required",
+      };
+    } else {
+      errors.orderby = { error: false, helperText: "" };
+    }
+
+    if (!orderData.order.trim()) {
+      errors.order = {
+        error: true,
+        helperText: "Order is required",
+      };
+    } else {
+      errors.order = { error: false, helperText: "" };
+    }
+
+    if (!orderData.payment.trim()) {
+      errors.payment = {
+        error: true,
+        helperText: "Payment is required",
+      };
+    } else {
+      errors.payment = { error: false, helperText: "" };
+    }
+
+    setFormErrors(errors);
+
+    if (errors.orderby.error || errors.order.error || errors.payment.error) {
       return;
     }
     console.log("Order Submitted:", orderData);
+
+    const newOrder = {
+      ...orderData,
+      totalPrice: orderData.totalPrice,
+    };
+
     setOrders((prev) => {
-      setError(false);
-      setHelperText("");
-      return [...prev, orderData];
+      return [...prev, newOrder];
     });
+
     setOrderData({
       orderby: "",
       order: "",
       payment: "",
       tags: [],
       totalPrice: 0,
+    });
+
+    setFormErrors({
+      orderby: { error: false, helperText: "" },
+      order: { error: false, helperText: "" },
+      payment: { error: false, helperText: "" },
     });
   };
 
@@ -86,8 +138,7 @@ const OrderForm = ({ setOrders }) => {
         <img src={Chef} alt="Logo" className="logo" />
         <h1>Y Kitchen</h1>
       </div>
-      <Box component="form" onSubmit={handleSubmit}>
-        {/* <form onSubmit={handleSubmit}> */}
+      <Box component="form" onSubmit={handleSubmit} sx={{ margin: 2 }}>
         <Box
           sx={{
             display: "flex",
@@ -103,9 +154,8 @@ const OrderForm = ({ setOrders }) => {
             onChange={handleChange}
             className="order_input"
             label="Enter your name"
-            size="small"
-            error={error}
-            helperText={helperText}
+            error={formErrors.orderby.error}
+            helperText={formErrors.orderby.helperText}
           />
           <TextField
             name="order"
@@ -113,71 +163,47 @@ const OrderForm = ({ setOrders }) => {
             className="order_input"
             label="Enter order"
             onChange={handleChange}
-            size="small"
-            error={error}
-            helperText={helperText}
+            error={formErrors.order.error}
+            helperText={formErrors.order.helperText}
           />
-        </Box>
-        <div className="order_form_bottom_line">
-          <div>
-            <Tag
-              tagName="Combo129"
-              selectTag={selectTag}
-              // selected={checkTag("Combo129")}
-              selected={orderData.tags.some((item) => item.name === "Combo129")}
-              price={129}
-            />
-            <Tag
-              tagName="Single99"
-              selectTag={selectTag}
-              // selected={checkTag("Single99")}
-              selected={orderData.tags.some((item) => item.name === "Single99")}
-              price={99}
-            />
-            <Tag
-              tagName="ExtraRice"
-              selectTag={selectTag}
-              // selected={checkTag("ExtraRice")}
-              selected={orderData.tags.some(
-                (item) => item.name === "ExtraRice"
-              )}
-              price={15}
-            />
-            <Tag
-              tagName="Soup"
-              selectTag={selectTag}
-              // selected={checkTag("Soup")}
-              selected={orderData.tags.some((item) => item.name === "Soup")}
-              price={0}
-            />
-          </div>
 
-          <div>
-            <select
-              name="payment"
-              className="payment"
-              value={orderData.payment}
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled hidden>
-                Select Payment Method
-              </option>
-              <option value="cash">Cash</option>
-              <option value="gcash">Gcash</option>
-              <option value="bank">Bank Transfer</option>
-            </select>
-            <Button
-              type="submit"
-              className="order_submit"
-              startIcon={<AddCard />}
-              variant="contained"
-            >
-              + Add Order
-            </Button>
-          </div>
-        </div>
-        {/* </form> */}
+          <Box sx={{ minWidth: 160 }}>
+            <FormControl fullWidth error={formErrors.payment.error}>
+              <InputLabel id="payment-select-label">Payment Method</InputLabel>
+              <Select
+                labelId="payment-select-label"
+                id="payment-select"
+                name="payment"
+                value={orderData.payment}
+                label="Payment Method"
+                onChange={handleChange}
+                helperText={helperText}
+              >
+                {paymentOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>{formErrors.payment.helperText}</FormHelperText>
+            </FormControl>
+          </Box>
+        </Box>
+        <Box sx={{ display: "flex" }} gap={2}>
+          <Tag
+            tags={tags}
+            selectTag={selectTag}
+            selectedTags={orderData.tags}
+          />
+          <Button
+            type="submit"
+            className="order_submit"
+            startIcon={<AddCard />}
+            variant="contained"
+          >
+            + Add Order
+          </Button>
+        </Box>
       </Box>
     </header>
   );
