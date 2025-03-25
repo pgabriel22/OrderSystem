@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import OrderForm from "./components/OrderForm";
 import OrderColumn from "./components/OrderColumn";
+import PaymentStatusColumn from "./components/PaymentStatusColumn";
 import comboIcon from "./assets/cash.png";
 import singleIcon from "./assets/gcash.png";
 import othersIcon from "./assets/banktransfer.png";
@@ -98,8 +99,8 @@ const App = () => {
           formErrors={formErrors}
           setFormErrors={setFormErrors}
         />
-        <OrderColumn
-          title="Bank Transfer"
+        <PaymentStatusColumn
+          title="Payment Status"
           icon={othersIcon}
           order={order}
           payment="bank"

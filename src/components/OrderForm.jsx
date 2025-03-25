@@ -19,7 +19,6 @@ import { AddCard } from "@mui/icons-material";
 const paymentOptions = [
   { label: "Cash", value: "cash" },
   { label: "GCash", value: "gcash" },
-  { label: "Bank Transfer", value: "bank" },
 ];
 
 const tags = [

@@ -3,8 +3,9 @@ import React from "react";
 import "./OrderColumn.css";
 import OrderCard from "./OrderCard";
 import { Paper, Box, Typography, Divider, Button } from "@mui/material";
+import { CreditScoreRounded } from "@mui/icons-material";
 
-const TaskColumn = ({
+const PaymentStatusColumn = ({
   title,
   icon,
   order,
@@ -87,12 +88,20 @@ const TaskColumn = ({
       }}
       gap={2}
     >
-      <Box sx={{ p: 2, borderBottom: "1px solid #ccc", zIndex: 1 }}>
+      <Box
+        sx={{
+          p: 2,
+          borderBottom: "1px solid #ccc",
+          zIndex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Typography
           variant="h6"
           sx={{ display: "flex", justifyContent: "center" }}
         >
-          <img className="order_column_icon" src={icon} />
+          <CreditScoreRounded />
           {title}
         </Typography>
       </Box>
@@ -138,4 +147,4 @@ const TaskColumn = ({
   );
 };
 
-export default TaskColumn;
+export default PaymentStatusColumn;
