@@ -2,7 +2,7 @@ import React from "react";
 
 import "./OrderColumn.css";
 import OrderCard from "./OrderCard";
-import { Paper, Box, Typography, Divider } from "@mui/material";
+import { Paper, Box, Typography, Divider, Button } from "@mui/material";
 
 const TaskColumn = ({
   title,
@@ -22,6 +22,57 @@ const TaskColumn = ({
   const totalPrice = order
     .filter((item) => item.payment === payment)
     .reduce((sum, item) => sum + (item.totalPrice || 0), 0);
+
+  const handleDownload = () => {
+    const filteredOrders = order.filter((item) => item.payment === payment);
+
+    // Group identical orders by name
+    const groupedOrders = filteredOrders.reduce((acc, item) => {
+      const existingOrder = acc.find((o) => o.order === item.order);
+
+      if (existingOrder) {
+        existingOrder.quantity += 1;
+        existingOrder.totalPrice += item.totalPrice || 0;
+      } else {
+        acc.push({
+          order: item.order,
+          quantity: 1,
+          totalPrice: item.totalPrice || 0,
+        });
+      }
+
+      return acc;
+    }, []);
+
+    // Format the content for the text file
+    const fileContent = groupedOrders
+      .map((item) => {
+        return `${item.order} x${
+          item.quantity
+        } - ₱${item.totalPrice.toLocaleString("en-PH", {
+          minimumFractionDigits: 2,
+        })}`;
+      })
+      .join("\n");
+
+    const totalText = `\nTotal Price: ₱${totalPrice.toLocaleString("en-PH", {
+      minimumFractionDigits: 2,
+    })}`;
+
+    const fullContent = `Payment Method: ${title}\n\n${fileContent}${totalText}`;
+
+    // Create and download the text file
+    const blob = new Blob([fullContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${title}_Orders_Grouped.txt`;
+    link.click();
+
+    URL.revokeObjectURL(url); // Clean up
+  };
+
   return (
     <Box
       component="section"
@@ -66,7 +117,7 @@ const TaskColumn = ({
             />
           )
       )}
-      <Box sx={{ p: 2, zIndex: 1 }}>
+      <Box sx={{ p: 2, borderBottom: "1px", zIndex: 1 }}>
         <Divider sx={{ my: 2 }} />
         <Typography
           variant="h6"
@@ -75,6 +126,9 @@ const TaskColumn = ({
           Total: ₱
           {totalPrice.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
         </Typography>
+        <Button variant="contained" color="primary" onClick={handleDownload}>
+          Download Order List
+        </Button>
       </Box>
     </Box>
   );
