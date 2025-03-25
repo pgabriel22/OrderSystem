@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import "./OrderCard.css";
-import { IconButton, Tooltip, Chip, TextField } from "@mui/material";
+import {
+  IconButton,
+  Tooltip,
+  Chip,
+  TextField,
+  Card,
+  CardActions,
+  CardContent,
+  Box,
+} from "@mui/material";
 import Tag from "./Tag";
 import { Save, Edit, Cancel, Delete } from "@mui/icons-material";
 
@@ -24,6 +33,7 @@ const OrderCard = ({
   isEditing,
   tempOrder,
   setTempOrder,
+  formErrors,
 }) => {
   const selectTag = (tag) => {
     const existingTag = tempOrder.tags.some((t) => t.name === tag.name);
@@ -40,72 +50,91 @@ const OrderCard = ({
     }));
   };
   return (
-    <article className="order_card">
-      {isEditing === index ? (
-        <div className="order_card_update">
-          <TextField
-            type="text"
-            className="order_update_input"
-            value={tempOrder.order}
-            onChange={(e) =>
-              setTempOrder({ ...tempOrder, order: e.target.value })
-            }
-          />
-          <p className="customer_text">Ordered By: {customer}</p>
-          <p className="order_price">
-            Total Price: ₱
-            {isEditing === index ? tempOrder.totalPrice : totalPrice}
-          </p>
-          <div className="order_card_bottom_line">
-            <Tag
-              tags={tagsData}
-              selectTag={selectTag}
-              selectedTags={tempOrder.tags}
+    <Card sx={{ mb: 2, boxShadow: 3, borderRadius: 2 }}>
+      <CardContent>
+        {isEditing === index ? (
+          <>
+            <TextField
+              type="text"
+              className="order_update_input"
+              label="Enter Order"
+              value={tempOrder.order || ""}
+              onChange={(e) =>
+                setTempOrder({ ...tempOrder, order: e.target.value })
+              }
+              sx={{ width: "100%", mb: 2 }}
+              error={formErrors?.order?.error || false}
+              helperText={formErrors?.order?.helperText || ""}
             />
-            <div className="order_ud">
-              <IconButton variant="contained" onClick={handleUpdate}>
-                <Save />
-              </IconButton>
-              <IconButton variant="contained" onClick={handleCancel}>
-                <Cancel />
-              </IconButton>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <>
-          <p className="order_text">{title}</p>
-          <p className="customer_text">Ordered By: {customer}</p>
-          <p className="order_price">Total Price: ₱{totalPrice}</p>
+            <p className="customer_text">Ordered By: {customer}</p>
+            <p className="order_price">
+              Total Price: ₱
+              {isEditing === index ? tempOrder.totalPrice : totalPrice}
+            </p>
 
-          <div className="order_card_bottom_line">
-            <div className="order_card_tags">
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Tag
+                tags={tagsData}
+                selectTag={selectTag}
+                selectedTags={tempOrder.tags}
+              />
+            </Box>
+          </>
+        ) : (
+          <>
+            <p className="order_text">{title}</p>
+            <p className="customer_text">Ordered By: {customer}</p>
+            <p className="order_price">Total Price: ₱{totalPrice}</p>
+            <Box sx={{ display: "flex", flexWrap: "wrap", mb: 2 }}>
               {tags.map((tag, idx) => (
                 <Tooltip key={idx} title={`₱${tag.price}`}>
                   <Chip label={tag.label} color="primary" sx={{ m: 0.5 }} />
                 </Tooltip>
               ))}
-            </div>
-            <div className="order_ud">
-              <div className="order_edit" onClick={() => handleEdit(index)}>
-                <Tooltip title="Edit">
-                  <IconButton variant="contained">
-                    <Edit />
-                  </IconButton>
-                </Tooltip>
-              </div>
-              <div className="order_delete" onClick={() => handleDelete(index)}>
-                <Tooltip title="Delete">
-                  <IconButton variant="contained">
-                    <Delete />
-                  </IconButton>
-                </Tooltip>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-    </article>
+            </Box>
+          </>
+        )}
+      </CardContent>
+
+      <CardActions sx={{ justifyContent: "flex-end" }}>
+        {isEditing === index ? (
+          <>
+            <Tooltip title="Save">
+              <IconButton variant="contained" onClick={handleUpdate}>
+                <Save />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Cancel">
+              <IconButton variant="contained" onClick={handleCancel}>
+                <Cancel />
+              </IconButton>
+            </Tooltip>
+          </>
+        ) : (
+          <>
+            <Tooltip title="Edit">
+              <IconButton variant="contained" onClick={() => handleEdit(index)}>
+                <Edit />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <IconButton
+                variant="contained"
+                onClick={() => handleDelete(index)}
+              >
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+      </CardActions>
+    </Card>
   );
 };
 

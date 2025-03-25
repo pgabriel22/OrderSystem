@@ -15,6 +15,9 @@ const App = () => {
   const [order, setOrders] = useState(JSON.parse(oldOrders) || []);
   const [isEditing, setIsEditing] = useState(null);
   const [tempOrder, setTempOrder] = useState({});
+  const [formErrors, setFormErrors] = useState({
+    order: { error: false, helperText: "" },
+  });
 
   useEffect(() => {
     localStorage.setItem("order", JSON.stringify(order));
@@ -35,8 +38,22 @@ const App = () => {
   };
 
   const handleUpdate = () => {
-    if (!tempOrder.order.trim() || tempOrder.tags.length === 0) {
-      alert("Please fill the fields and select atleast one tag.");
+    // let errors = { ...formErrors };
+
+    const errors = { order: { error: false, helperText: "" } };
+
+    if (!tempOrder.order?.trim()) {
+      errors.order = {
+        error: true,
+        helperText: "Order is required",
+      };
+    }
+    // else {
+    //   errors.order = { error: false, helperText: "" };
+    // }
+    setFormErrors(errors);
+
+    if (errors.order.error) {
       return;
     }
     const updatedOrder = [...order];
@@ -63,6 +80,8 @@ const App = () => {
           isEditing={isEditing}
           tempOrder={tempOrder}
           setTempOrder={setTempOrder}
+          formErrors={formErrors}
+          setFormErrors={setFormErrors}
         />
         <OrderColumn
           title="GCash"
@@ -76,6 +95,8 @@ const App = () => {
           isEditing={isEditing}
           tempOrder={tempOrder}
           setTempOrder={setTempOrder}
+          formErrors={formErrors}
+          setFormErrors={setFormErrors}
         />
         <OrderColumn
           title="Bank Transfer"
@@ -89,6 +110,8 @@ const App = () => {
           isEditing={isEditing}
           tempOrder={tempOrder}
           setTempOrder={setTempOrder}
+          formErrors={formErrors}
+          setFormErrors={setFormErrors}
         />
       </main>
       <Footer />

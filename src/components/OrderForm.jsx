@@ -12,7 +12,7 @@ import {
   FormControl,
   Select,
   FormHelperText,
-  Chip,
+  Stack,
 } from "@mui/material";
 import { AddCard } from "@mui/icons-material";
 
@@ -43,6 +43,7 @@ const OrderForm = ({ setOrders }) => {
     orderby: { error: false, helperText: "" },
     order: { error: false, helperText: "" },
     payment: { error: false, helperText: "" },
+    orderTags: { error: false, helperText: "" },
   });
 
   const handleChange = (e) => {
@@ -189,17 +190,28 @@ const OrderForm = ({ setOrders }) => {
             </FormControl>
           </Box>
         </Box>
-        <Box sx={{ display: "flex" }} gap={2}>
-          <Tag
-            tags={tags}
-            selectTag={selectTag}
-            selectedTags={orderData.tags}
-          />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            margin: "0 auto",
+          }}
+          gap={2}
+        >
+          <Stack direction="row" spacing={1}>
+            <Tag
+              tags={tags}
+              selectTag={selectTag}
+              selectedTags={orderData.tags}
+            />
+          </Stack>
           <Button
             type="submit"
             className="order_submit"
             startIcon={<AddCard />}
             variant="contained"
+            sx={{ justifyContent: "flex-end" }}
           >
             + Add Order
           </Button>

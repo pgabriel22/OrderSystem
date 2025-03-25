@@ -2,6 +2,7 @@ import React from "react";
 
 import "./OrderColumn.css";
 import OrderCard from "./OrderCard";
+import { Paper, Box, Typography } from "@mui/material";
 
 const TaskColumn = ({
   title,
@@ -15,14 +16,30 @@ const TaskColumn = ({
   isEditing,
   tempOrder,
   setTempOrder,
-  totalPrice,
+  formErrors,
+  setFormErrors,
 }) => {
   return (
-    <section className="order_column">
-      <h2 className="order_column_heading">
+    <Box
+      component="section"
+      sx={{
+        width: "500px",
+        height: "800px",
+        overflow: "auto",
+        p: 2,
+        borderRadius: 2,
+        boxShadow: 1,
+      }}
+      gap={2}
+    >
+      {/* <section className="order_column"> */}
+      <Typography
+        variant="h6"
+        sx={{ display: "flex", justifyContent: "center" }}
+      >
         <img className="order_column_icon" src={icon} />
         {title}
-      </h2>
+      </Typography>
 
       {order.map(
         (order, index) =>
@@ -41,10 +58,13 @@ const TaskColumn = ({
               setTempOrder={setTempOrder}
               index={index}
               totalPrice={order.totalPrice}
+              formErrors={formErrors}
+              setFormErros={setFormErrors}
             />
           )
       )}
-    </section>
+      {/* </section> */}
+    </Box>
   );
 };
 
