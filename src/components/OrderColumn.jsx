@@ -35,7 +35,6 @@ const TaskColumn = ({
       }}
       gap={2}
     >
-      {/* <section className="order_column"> */}
       <Typography
         variant="h6"
         sx={{ display: "flex", justifyContent: "center" }}
@@ -43,6 +42,7 @@ const TaskColumn = ({
         <img className="order_column_icon" src={icon} />
         {title}
       </Typography>
+      <Divider sx={{ my: 2 }} />
 
       {order.map(
         (order, index) =>
@@ -66,20 +66,16 @@ const TaskColumn = ({
             />
           )
       )}
-      {/* </section> */}
-      <Divider sx={{ my: 2 }} />
-      <Typography
-        variant="h6"
-        sx={{ textAlign: "right", fontWeight: "Bold", mt: 2 }}
-      >
-        {/* {item &&
-          item.count > 0 &&
-          `Total: ₱${totalPrice.toLocaleString("en-PH", {
-            minimumFractionDigits: 2,
-          })}`} */}
-        Total: ₱
-        {totalPrice.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
-      </Typography>
+      <Box sx={{ p: 2, zIndex: 1 }}>
+        <Divider sx={{ my: 2 }} />
+        <Typography
+          variant="h6"
+          sx={{ textAlign: "right", fontWeight: "Bold", mt: 2 }}
+        >
+          Total: ₱
+          {totalPrice.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+        </Typography>
+      </Box>
     </Box>
   );
 };

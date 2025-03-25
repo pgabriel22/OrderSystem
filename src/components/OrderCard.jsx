@@ -18,6 +18,7 @@ const tagsData = [
   { name: "Combo129", label: "Combo 129", price: 129 },
   { name: "Single99", label: "Single 99", price: 99 },
   { name: "ExtraRice", label: "Extra Rice", price: 15 },
+  { name: "ExtraRice", label: "Extra Rice", price: 15 },
 ];
 
 const OrderCard = ({
