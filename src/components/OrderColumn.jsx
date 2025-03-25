@@ -47,11 +47,13 @@ const TaskColumn = ({
     // Format the content for the text file
     const fileContent = groupedOrders
       .map((item) => {
-        return `${item.order} x${
-          item.quantity
-        } - ₱${item.totalPrice.toLocaleString("en-PH", {
-          minimumFractionDigits: 2,
-        })}`;
+        return `${item.order} - x${item.quantity}`;
+
+        // return `${item.order} x${
+        //   item.quantity
+        // } - ₱${item.totalPrice.toLocaleString("en-PH", {
+        //   minimumFractionDigits: 2,
+        // })}`;
       })
       .join("\n");
 
