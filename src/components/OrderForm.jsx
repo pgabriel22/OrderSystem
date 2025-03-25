@@ -35,6 +35,7 @@ const OrderForm = ({ setOrders }) => {
     payment: "",
     tags: [],
     totalPrice: 0,
+    paymentStatus: "unpaid",
   });
 
   const [helperText] = useState("");
@@ -124,6 +125,7 @@ const OrderForm = ({ setOrders }) => {
       payment: "",
       tags: [],
       totalPrice: 0,
+      paymentStatus: "",
     });
 
     setFormErrors({

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./OrderCard.css";
 import {
@@ -10,9 +10,13 @@ import {
   CardActions,
   CardContent,
   Box,
+  Switch,
+  FormControl,
+  FormControlLabel,
 } from "@mui/material";
 import Tag from "./Tag";
-import { Save, Edit, Cancel, Delete } from "@mui/icons-material";
+import { Save, Edit, Cancel, Delete, PaidOutlined } from "@mui/icons-material";
+import { Paid, MoneyOff } from "@mui/icons-material"
 
 const tagsData = [
   { name: "Combo129", label: "Combo 129", price: 129 },
@@ -35,7 +39,11 @@ const OrderCard = ({
   tempOrder,
   setTempOrder,
   formErrors,
+  paymentStatus,
+  onStatusChange,
 }) => {
+  const [isPaid, setIsPaid] = useState(paymentStatus === "paid");
+
   const selectTag = (tag) => {
     const existingTag = tempOrder.tags.some((t) => t.name === tag.name);
     const updateTags = existingTag
@@ -50,6 +58,15 @@ const OrderCard = ({
       totalPrice: prev.totalPrice + priceChange,
     }));
   };
+
+  const handleSwitch = () => {
+    const newStatus = isPaid ? "unpaid" : "paid";
+    setIsPaid(!isPaid);
+    setTempOrder((prev) => ({
+      ...prev, paymentStatus: newStatus
+    }));
+  };
+
   return (
     <Card sx={{ mb: 2, boxShadow: 3, borderRadius: 2 }}>
       <CardContent>
@@ -72,7 +89,9 @@ const OrderCard = ({
               Total Price: ₱
               {isEditing === index ? tempOrder.totalPrice : totalPrice}
             </p>
-
+            <Box>
+              <FormControlLabel control={<Switch checked={isPaid} onChange={handleSwitch} color="success"/>} label={isPaid ? "Paid" : "Unpaid"} />
+            </Box>
             <Box
               sx={{
                 display: "flex",
@@ -89,6 +108,12 @@ const OrderCard = ({
           </>
         ) : (
           <>
+            <Box sx={{ display: "flex" , flexWrap: "wrap", mb: 2, position: "right", justifyContent: "flex-end"}}>
+              <Chip 
+              label={paymentStatus === "paid" ? <Paid /> : <MoneyOff />}
+              color={paymentStatus === "paid" ? "success" : "error"}
+              sx={{ ml: 1}}/>
+            </Box>
             <p className="order_text">{title}</p>
             <p className="customer_text">Ordered By: {customer}</p>
             <p className="order_price">Total Price: ₱{totalPrice}</p>

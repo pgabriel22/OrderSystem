@@ -34,12 +34,19 @@ const App = () => {
     setTempOrder({ ...order[orderIndex] });
   };
 
+  const handleStatusChange = (index, newStatus) => {
+    const updatedOrders = [...order];
+    updatedOrders[index].paymentStatus = newStatus;
+
+    setOrders(updatedOrders);
+    localStorage.setItem("order", JSON.stringify(updatedOrders));
+  };
+
   const handleCancel = () => {
     setIsEditing(null);
   };
 
   const handleUpdate = () => {
-    // let errors = { ...formErrors };
 
     const errors = { order: { error: false, helperText: "" } };
 
@@ -49,16 +56,19 @@ const App = () => {
         helperText: "Order is required",
       };
     }
-    // else {
-    //   errors.order = { error: false, helperText: "" };
-    // }
+
     setFormErrors(errors);
 
     if (errors.order.error) {
       return;
     }
+
     const updatedOrder = [...order];
-    updatedOrder[isEditing] = tempOrder;
+    // updatedOrder[isEditing] = tempOrder;
+    updatedOrder[isEditing] = {
+      ...tempOrder, paymentStatus: tempOrder.paymentStatus || "unpaid"
+    };
+
     setOrders(updatedOrder);
     setIsEditing(null);
     localStorage.setItem("order", JSON.stringify(updatedOrder));
@@ -83,6 +93,7 @@ const App = () => {
           setTempOrder={setTempOrder}
           formErrors={formErrors}
           setFormErrors={setFormErrors}
+          handleStatusChange={handleStatusChange}
         />
         <OrderColumn
           title="GCash"
@@ -98,21 +109,11 @@ const App = () => {
           setTempOrder={setTempOrder}
           formErrors={formErrors}
           setFormErrors={setFormErrors}
+          handleStatusChange={handleStatusChange}
         />
         <PaymentStatusColumn
           title="Payment Status"
-          icon={othersIcon}
           order={order}
-          payment="bank"
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-          handleUpdate={handleUpdate}
-          handleCancel={handleCancel}
-          isEditing={isEditing}
-          tempOrder={tempOrder}
-          setTempOrder={setTempOrder}
-          formErrors={formErrors}
-          setFormErrors={setFormErrors}
         />
       </main>
       <Footer />

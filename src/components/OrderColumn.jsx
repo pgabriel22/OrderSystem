@@ -18,6 +18,8 @@ const TaskColumn = ({
   setTempOrder,
   formErrors,
   setFormErrors,
+  paymentStatus,
+  handleStatusChange,
 }) => {
   const totalPrice = order
     .filter((item) => item.payment === payment)
@@ -116,6 +118,8 @@ const TaskColumn = ({
                 totalPrice={order.totalPrice}
                 formErrors={formErrors}
                 setFormErros={setFormErrors}
+                paymentStatus={order.paymentStatus || "unpaid"}
+                onStatusChange={handleStatusChange}
               />
             )
         )}

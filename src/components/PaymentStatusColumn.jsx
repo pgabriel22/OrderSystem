@@ -1,80 +1,14 @@
 import React from "react";
 
 import "./OrderColumn.css";
-import OrderCard from "./OrderCard";
-import { Paper, Box, Typography, Divider, Button } from "@mui/material";
-import { CreditScoreRounded } from "@mui/icons-material";
+import PaymentList from "./PaymentList";
+import { Card, CardContent, Box, Typography, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { CreditScoreRounded, CheckCircle, Cancel} from "@mui/icons-material";
 
-const PaymentStatusColumn = ({
-  title,
-  icon,
-  order,
-  payment,
-  handleEdit,
-  handleUpdate,
-  handleCancel,
-  handleDelete,
-  isEditing,
-  tempOrder,
-  setTempOrder,
-  formErrors,
-  setFormErrors,
-}) => {
-  const totalPrice = order
-    .filter((item) => item.payment === payment)
-    .reduce((sum, item) => sum + (item.totalPrice || 0), 0);
+const PaymentStatusColumn =  ({ title, order }) => {
+  const paidOrders = order.filter((o) => o.paymentStatus === "paid");
+  const unpaidOrders = order.filter((o) => o.paymentStatus === "unpaid");
 
-  const handleDownload = () => {
-    const filteredOrders = order.filter((item) => item.payment === payment);
-
-    // Group identical orders by name
-    const groupedOrders = filteredOrders.reduce((acc, item) => {
-      const existingOrder = acc.find((o) => o.order === item.order);
-
-      if (existingOrder) {
-        existingOrder.quantity += 1;
-        existingOrder.totalPrice += item.totalPrice || 0;
-      } else {
-        acc.push({
-          order: item.order,
-          quantity: 1,
-          totalPrice: item.totalPrice || 0,
-        });
-      }
-
-      return acc;
-    }, []);
-
-    // Format the content for the text file
-    const fileContent = groupedOrders
-      .map((item) => {
-        return `${item.order} - x${item.quantity}`;
-
-        // return `${item.order} x${
-        //   item.quantity
-        // } - ₱${item.totalPrice.toLocaleString("en-PH", {
-        //   minimumFractionDigits: 2,
-        // })}`;
-      })
-      .join("\n");
-
-    const totalText = `\nTotal Price: ₱${totalPrice.toLocaleString("en-PH", {
-      minimumFractionDigits: 2,
-    })}`;
-
-    const fullContent = `Payment Method: ${title}\n\n${fileContent}${totalText}`;
-
-    // Create and download the text file
-    const blob = new Blob([fullContent], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${title}_Orders_Grouped.txt`;
-    link.click();
-
-    URL.revokeObjectURL(url); // Clean up
-  };
   return (
     <Box
       component="section"
@@ -105,44 +39,37 @@ const PaymentStatusColumn = ({
           {title}
         </Typography>
       </Box>
-      <Box sx={{ flex: 1, overflowY: "auto", p: 2 }}>
-        {order.map(
-          (order, index) =>
-            order.payment === payment && (
-              <OrderCard
-                key={index}
-                title={order.order}
-                customer={order.orderby}
-                tags={order.tags}
-                handleEdit={handleEdit}
-                handleUpdate={handleUpdate}
-                handleCancel={handleCancel}
-                handleDelete={handleDelete}
-                isEditing={isEditing}
-                tempOrder={tempOrder}
-                setTempOrder={setTempOrder}
-                index={index}
-                totalPrice={order.totalPrice}
-                formErrors={formErrors}
-                setFormErros={setFormErrors}
-              />
-            )
+      {/* <Typography variant="h6" gutterBottom sx={{  display: "flex", justifyContent: "center"}}>List of Paid Customers</Typography>
+      <List>
+        {paidOrders.map((o, index) => (
+          <ListItem key={index}>
+            <ListItemText primary={o.orderBy} />
+            <ListItemIcon>
+              <CheckCircle color="success" />
+            </ListItemIcon>
+            <ListItemText primary={o.orderby} secondary="Paid" />
+          </ListItem>
+        ))}
+        {paidOrders.length === 0 && (
+          <Typography color="textSecondary" sx={{ ml: 2 }}>No paid customers</Typography>
         )}
-      </Box>
+      </List>
 
-      <Box sx={{ p: 2, borderBottom: "1px", zIndex: 1 }}>
-        <Divider sx={{ my: 2 }} />
-        <Typography
-          variant="h6"
-          sx={{ textAlign: "right", fontWeight: "Bold", mt: 2 }}
-        >
-          Total: ₱
-          {totalPrice.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
-        </Typography>
-        <Button variant="contained" color="primary" onClick={handleDownload}>
-          Download Order List
-        </Button>
-      </Box>
+      <Typography variant="h6" gutterBottom sx={{  display: "flex", justifyContent: "center"}}>List of Unpaid Customers</Typography>
+      <List>
+        {unpaidOrders.map((o, index) => (
+          <ListItem key={index}>
+            <ListItemIcon>
+              <Cancel color="error" />
+            </ListItemIcon>
+            <ListItemText primary={o.customer} secondary="Unpaid" />
+          </ListItem>
+        ))}
+        {unpaidOrders.length === 0 && (
+          <Typography color="textSecondary" sx={{ ml: 2 }}>No unpaid customers</Typography>
+        )}
+      </List> */}
+      <PaymentList orders={order} />
     </Box>
   );
 };
