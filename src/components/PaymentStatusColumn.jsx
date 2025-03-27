@@ -15,8 +15,8 @@ import {
 import { CreditScoreRounded, CheckCircle, Cancel } from "@mui/icons-material";
 
 const PaymentStatusColumn = ({ title, order }) => {
-  const paidOrders = order.filter((o) => o.paymentStatus === "paid");
-  const unpaidOrders = order.filter((o) => o.paymentStatus === "unpaid");
+  // const paidOrders = order.filter((o) => o.paymentStatus === "paid");
+  // const unpaidOrders = order.filter((o) => o.paymentStatus === "unpaid");
 
   return (
     <Box
@@ -43,7 +43,12 @@ const PaymentStatusColumn = ({ title, order }) => {
       >
         <Typography
           variant="h6"
-          sx={{ display: "flex", justifyContent: "center" }}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          gap={1}
         >
           <CreditScoreRounded />
           {title}
