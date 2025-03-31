@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "./OrderForm.css";
 import Tag from "./Tag";
@@ -13,8 +14,9 @@ import {
   Select,
   FormHelperText,
   Stack,
+  IconButton,
 } from "@mui/material";
-import { AddCard } from "@mui/icons-material";
+import { AddCard, Home } from "@mui/icons-material";
 
 const paymentOptions = [
   { label: "Cash", value: "cash" },
@@ -29,6 +31,8 @@ const tags = [
 ];
 
 const OrderForm = ({ setOrders }) => {
+  const navigate = useNavigate();
+
   const [orderData, setOrderData] = useState({
     orderby: "",
     order: "",
@@ -180,7 +184,6 @@ const OrderForm = ({ setOrders }) => {
                 value={orderData.payment}
                 label="Payment Method"
                 onChange={handleChange}
-                helperText={helperText}
               >
                 {paymentOptions.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
@@ -218,6 +221,11 @@ const OrderForm = ({ setOrders }) => {
             + Add Order
           </Button>
         </Box>
+      </Box>
+      <Box>
+        <IconButton onClick={() => navigate("/")}>
+          <Home />
+        </IconButton>
       </Box>
     </header>
   );
