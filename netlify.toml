@@ -6,6 +6,12 @@
 [build.environment]
   NODE_VERSION = "20"
 
+[functions]
+  node_bundler = "esbuild"
+
+[secrets]
+  scan = false
+
 [[headers]]
   for = "/*.js"
     [headers.values]
