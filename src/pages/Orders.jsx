@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { testSupabaseConnection } from "../supabaseTest.jsx";
 import { useNavigate } from "react-router-dom";
 
 // import "./App.css";
@@ -22,10 +21,6 @@ const Orders = () => {
   const [formErrors, setFormErrors] = useState({
     order: { error: false, helperText: "" },
   });
-
-  useEffect(() => {
-    testSupabaseConnection();
-  }, []);
 
   useEffect(() => {
     localStorage.setItem("order", JSON.stringify(order));

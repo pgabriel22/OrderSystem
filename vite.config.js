@@ -19,7 +19,4 @@ export default defineConfig({
       "application/javascript": ["js"],
     },
   },
-  define: {
-    "process.env": {}, // Ensure Vite doesn't inline the env variables
-  },
 });
