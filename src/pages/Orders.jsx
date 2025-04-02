@@ -10,6 +10,8 @@ import comboIcon from "../assets/cash.png";
 import singleIcon from "../assets/gcash.png";
 import Footer from "../components/Footer";
 import MenuBuildup from "./MenuBuildup.jsx";
+import AppBar from "../components/AppNavBar";
+import AppNavBar from "../components/AppNavBar";
 
 const oldOrders = localStorage.getItem("order");
 // console.log(oldOrders);
@@ -79,6 +81,7 @@ const Orders = () => {
   // console.log("order", order);
   return (
     <div className="app">
+      <AppNavBar />
       <OrderForm setOrders={setOrders} />
       <main className="app_main">
         <OrderColumn

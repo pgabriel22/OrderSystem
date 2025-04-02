@@ -140,11 +140,7 @@ const OrderForm = ({ setOrders }) => {
   };
 
   return (
-    <header className="app_header">
-      <div className="logo-container">
-        <img src={Chef} alt="Logo" className="logo" />
-        <h1>Y Kitchen</h1>
-      </div>
+    <>
       <Box component="form" onSubmit={handleSubmit} sx={{ margin: 2 }}>
         <Box
           sx={{
@@ -227,7 +223,7 @@ const OrderForm = ({ setOrders }) => {
           <Home />
         </IconButton>
       </Box>
-    </header>
+    </> 
   );
 };
 

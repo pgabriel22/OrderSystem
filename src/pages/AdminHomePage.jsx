@@ -41,7 +41,7 @@ const AdminHomePage = () => {
             fontWeight: "bold"
           }}
         >
-          Welcome to Order ka ba?
+          Hello Kukulkan what would you like to do?
         </Typography>
 
         <Grid container spacing={2} justifyContent="center">
