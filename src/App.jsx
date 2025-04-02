@@ -6,6 +6,8 @@ import MenuBuildup from "./pages/MenuBuildup.jsx";
 import Orders from "./pages/Orders.jsx";
 import AdminHomePage from "./pages/AdminHomePage.jsx";
 import HomePage from "./pages/HomePage.jsx";
+import OrderingPage from "./pages/OrderingPage.jsx";
+
 
 const App = () => {
   return (
@@ -14,6 +16,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/admin-home" element={<AdminHomePage />} />
         <Route path="/order-list" element={<Orders />} />
+        <Route path="/order-create" element={<OrderingPage />} />
         <Route path="/menu-buildup" element={<MenuBuildup />} />
       </Routes>
     </Router>

@@ -5,19 +5,11 @@ import AppBar from "../components/AppNavBar";
 import {
   Box,
   Typography,
-  Checkbox,
-  FormControlLabel,
-  MenuItem,
-  Select,
-  TextField,
-  FormControl,
-  InputLabel,
   Button,
   useMediaQuery,
-  FormHelperText,
 } from "@mui/material";
 import { AddCard } from "@mui/icons-material";
-import Waiter from "../assets/taking-order.gif";
+import OnlineOrder from "../assets/online-ordering.gif";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -70,8 +62,8 @@ const HomePage = () => {
       >
         {/* Responsive Image */}
         <img
-          src={Waiter}
-          alt="Taking Order"
+          src={OnlineOrder}
+          alt="Food online ordering app"
           style={{
             maxWidth: "100%",
             height: isMobile ? "300px" : "500px", // Reduce size on mobile
@@ -87,83 +79,33 @@ const HomePage = () => {
             width: { xs: "90%", sm: 500, md: 800 }, // Adjust width dynamically
           }}
         >
-          <Typography
-            variant="h2"
-            sx={{
-              textAlign: "center",
-              mt: 2,
-              mb: 2,
-              fontWeight: "bold",
-              fontSize: { xs: "1.8rem", sm: "2.5rem", md: "3rem" }, // Adjust font size
-            }}
-          >
-            Order ka ba?
-          </Typography>
-          <TextField label="Order By" placeholder="Enter your Name" fullWidth />
-          <FormControl fullWidth>
-            <InputLabel id="first-dish-label">First Dish</InputLabel>
-            <Select
-              labelId="first-dish-label"
-              id="first-dish"
-              value={firstDish}
-              label="First Dish"
-              onChange={handleFirstDishChange}
-            >
-              <MenuItem value="dish1">Dish 1</MenuItem>
-              <MenuItem value="dish2">Dish 2</MenuItem>
-              <MenuItem value="dish3">Dish 3</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="second-dish-label">Second Dish</InputLabel>
-            <Select
-              labelId="second-dish-label"
-              id="second-dish"
-              value={secondDish}
-              label="Second Dish"
-              onChange={handleSecondDishChange}
-            >
-              <MenuItem value="dish1">Dish 1</MenuItem>
-              <MenuItem value="dish2">Dish 2</MenuItem>
-              <MenuItem value="dish3">Dish 3</MenuItem>
-            </Select>
-          </FormControl>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              gap: 3,
-            }}
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={extraRice}
-                  onChange={(e) => setExtraTrice(e.target.checked)}
-                />
-              }
-              label="Add Extra Rice?"
-            />
-            {extraRice && (
-              <TextField
-                type="number"
-                label="Number of Extra Rice"
-                value={extraRiceNum}
-                onChange={handleExtraRiceNum}
-                slotProps={{ input: { min: "1" } }}
-              ></TextField>
-            )}
-          </Box>
-
-          <Button
-            type="submit"
-            className="order_submit"
-            startIcon={<AddCard />}
-            variant="contained"
-            sx={{ width: "100%", fontSize: "1rem" }} // Full width on mobile
-          >
-            Add Order
-          </Button>
+           <Typography
+          variant="h4" // Adjusted variant for better responsiveness
+          sx={{
+            textAlign: "center",
+            mt: 2,
+            mb: 2,
+            fontWeight: "bold",
+            fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjusted font sizes
+          }}
+        >
+          Welcome to Order Ka Ba? (OKB)
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{
+            textAlign: "center",
+            mt: 2,
+            mb: 2,
+            fontWeight: "medium",
+            fontSize: { xs: "0.9rem", sm: "1.1rem", md: "1.3rem" }, // Adjusted for readability
+            maxWidth: "800px", // Improved readability constraint
+            lineHeight: 1.6,
+          }}
+        >
+          A web app designed to simplify lunch ordering for our department. With OKB, you can easily select your favorite dishes from Y Kitchen, and we'll consolidate all orders for convenient delivery, saving you time and making lunch breaks more enjoyable.
+        </Typography>
+        <Button onClick={() => navigate("/order-create") }>Click here to create your order</Button>
         </Box>
       </Box>
       <Footer />

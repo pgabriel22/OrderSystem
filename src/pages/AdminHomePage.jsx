@@ -1,67 +1,93 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useMediaQuery, useTheme } from "@mui/material";
 import Footer from "../components/Footer";
-import AppBar from "../components/AppNavBar"
-import { IconButton, Box, Typography, Card, CardActionArea, CardContent } from "@mui/material";
-import {
-  FormatListBulletedOutlined,
-  RestaurantMenu,
-} from "@mui/icons-material";
+import AppBar from "../components/AppNavBar";
+import { Box, Typography, Card, CardActionArea, CardContent, Grid } from "@mui/material";
+import MenuListIcon from "../assets/menu-list.jpg";
+import OrderListIcon from "../assets/order-checkout.gif";
+
 
 const AdminHomePage = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Box sx={{
       display: "flex",
       flexDirection: "column",
-      minHeight: "100vh", 
+      minHeight: "100vh",
     }}>
-    <AppBar />
-    <Box
+      <AppBar />
+      <Box
         sx={{
           flexGrow: 1,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "80vh", // Centers vertically
-          gap: 4, // Adds spacing between cards
+          minHeight: "80vh",
+          gap: 4,
+          p: 2, // Adds padding for better spacing on small screens
         }}
       >
-        <Typography variant="h2"     sx={{ 
-            textAlign: "center", 
-            mt: 4,  // Adds margin from top
-            mb: 4,  // Creates space between title and cards
-            fontWeight: "bold" 
-          }}>Welcome to Order ka ba?</Typography>
-        <Box sx={{
-          display: "flex",
-          justifyContent: "center",
-          gap: 4, // Adds spacing between cards
-        }}>
-        <Card sx={{ width: 250, textAlign: "center" }}>
-          <CardActionArea onClick={() => navigate("/order-list")}>
-            <CardContent>
-              <FormatListBulletedOutlined sx={{ fontSize: 50 }} />
-              <Typography variant="h6">Order List</Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
+        <Typography 
+          variant={isMobile ? "h4" : "h2"} // Adjust text size for smaller screens
+          sx={{
+            textAlign: "center",
+            mt: 4,
+            mb: 4,
+            fontWeight: "bold"
+          }}
+        >
+          Welcome to Order ka ba?
+        </Typography>
 
-        <Card sx={{ width: 250, textAlign: "center" }}>
-          <CardActionArea onClick={() => navigate("/menu-buildup")}>
-            <CardContent>
-              <RestaurantMenu sx={{ fontSize: 50 }} />
-              <Typography variant="h6">Menu Buildup</Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-        </Box>
+        <Grid container spacing={2} justifyContent="center">
+          {/* Order List Card */}
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Card sx={{ textAlign: "center" }}>
+              <CardActionArea onClick={() => navigate("/order-list")}> 
+                <CardContent>
+                <img
+                    src={OrderListIcon}
+                    alt="Order List"
+                    style={{
+                      maxWidth: "100%",
+                      height: isMobile ? "200px" : "300px", // Adjust image size for mobile
+                      objectFit: "contain",
+                    }}
+                  />
+                  <Typography variant="h6">Order List</Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+
+          {/* Menu Buildup Card */}
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Card sx={{ textAlign: "center" }}>
+              <CardActionArea onClick={() => navigate("/menu-buildup")}> 
+                <CardContent>
+                  <img
+                    src={MenuListIcon}
+                    alt="Menu List"
+                    style={{
+                      maxWidth: "100%",
+                      height: isMobile ? "200px" : "300px", // Adjust image size for mobile
+                      objectFit: "contain",
+                    }}
+                  />
+                  <Typography variant="h6">Menu Buildup</Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
-    <Footer />
+      <Footer />
     </Box>
-    
   );
 };
 

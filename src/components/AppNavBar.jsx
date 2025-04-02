@@ -30,13 +30,13 @@ const AppNavBar = () => {
       }}
     >
       <Toolbar>
-        <img src={OrderLogo} alt="Order Logo" style={{ height: "100px" }} />
+        <img src={OrderLogo} alt="Order Logo" style={{ height: "100px" }} onClick={() => navigate("/")} />
         {location.pathname === "/" && (
           <Button variant="text" sx={{ color: "white" }} onClick={openModal}>
             Login
           </Button>
         )}
-        {location.pathname !== "/" && (
+        {location.pathname !== "/" && location.pathname !== "/order-create" && (
           <Button variant="text" sx={{ color: "white" }}>
             Logout
           </Button>
@@ -50,8 +50,8 @@ const AppNavBar = () => {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              height: 300,
-              width: 700,
+              height: 270,
+              width: 500,
               bgcolor: "white",
               border: "2px solid #000",
               p: 4,
@@ -65,8 +65,9 @@ const AppNavBar = () => {
             <Box
               sx={{ display: "flex", flexDirection: "row" }}
               gap={2}
-              padding={1}
+              padding={2}
               margin={1}
+              marginLeft={33}
             >
               <Button
                 variant="contained"
