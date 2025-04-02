@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer className="app_footer">
       <p>
-        © {new Date().getFullYear()} Y Kitchen | Version {version}
+        © {new Date().getFullYear()} Order ka ba? | Version {version}
       </p>
     </footer>
   );
