@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import "./OrderCard.css";
 import {
   IconButton,
@@ -11,12 +10,13 @@ import {
   CardContent,
   Box,
   Switch,
-  FormControl,
   FormControlLabel,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import Tag from "./Tag";
 import { Save, Edit, Cancel, Delete, PaidOutlined } from "@mui/icons-material";
-import { Paid, MoneyOff } from "@mui/icons-material"
+import { Paid, MoneyOff } from "@mui/icons-material";
 
 const tagsData = [
   { name: "Combo129", label: "Combo 129", price: 129 },
@@ -43,6 +43,8 @@ const OrderCard = ({
   onStatusChange,
 }) => {
   const [isPaid, setIsPaid] = useState(paymentStatus === "paid");
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const selectTag = (tag) => {
     const existingTag = tempOrder.tags.some((t) => t.name === tag.name);
@@ -63,7 +65,8 @@ const OrderCard = ({
     const newStatus = isPaid ? "unpaid" : "paid";
     setIsPaid(!isPaid);
     setTempOrder((prev) => ({
-      ...prev, paymentStatus: newStatus
+      ...prev,
+      paymentStatus: newStatus,
     }));
   };
 
@@ -90,7 +93,16 @@ const OrderCard = ({
               {isEditing === index ? tempOrder.totalPrice : totalPrice}
             </p>
             <Box>
-              <FormControlLabel control={<Switch checked={isPaid} onChange={handleSwitch} color="success"/>} label={isPaid ? "Paid" : "Unpaid"} />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isPaid}
+                    onChange={handleSwitch}
+                    color="success"
+                  />
+                }
+                label={isPaid ? "Paid" : "Unpaid"}
+              />
             </Box>
             <Box
               sx={{
@@ -108,11 +120,19 @@ const OrderCard = ({
           </>
         ) : (
           <>
-            <Box sx={{ display: "flex" , flexWrap: "wrap", mb: 2, position: "right", justifyContent: "flex-end"}}>
-              <Chip 
-              label={paymentStatus === "paid" ? <Paid /> : <MoneyOff />}
-              color={paymentStatus === "paid" ? "success" : "error"}
-              sx={{ ml: 1}}/>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                mb: 2,
+                justifyContent: "flex-end",
+              }}
+            >
+              <Chip
+                label={paymentStatus === "paid" ? <Paid /> : <MoneyOff />}
+                color={paymentStatus === "paid" ? "success" : "error"}
+                sx={{ ml: 1 }}
+              />
             </Box>
             <p className="order_text">{title}</p>
             <p className="customer_text">Ordered By: {customer}</p>

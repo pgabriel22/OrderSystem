@@ -1,54 +1,40 @@
 import React from "react";
-
-import "./OrderColumn.css";
 import PaymentList from "./PaymentList";
-import {
-  Card,
-  CardContent,
-  Box,
-  Typography,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import { CreditScoreRounded, CheckCircle, Cancel } from "@mui/icons-material";
+import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
+import { CreditScoreRounded } from "@mui/icons-material";
 
 const PaymentStatusColumn = ({ title, order }) => {
-  // const paidOrders = order.filter((o) => o.paymentStatus === "paid");
-  // const unpaidOrders = order.filter((o) => o.paymentStatus === "unpaid");
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Box
       component="section"
       sx={{
-        width: "500px",
-        height: "800px",
+        width: isMobile ? "100%" : "500px",
+        maxHeight: "80vh",
         display: "flex",
         flexDirection: "column",
         borderRadius: 2,
-        boxShadow: 1,
+        boxShadow: 2,
         overflowY: "auto",
+        bgcolor: "background.paper",
       }}
-      gap={2}
     >
       <Box
         sx={{
           p: 2,
           borderBottom: "1px solid #ccc",
-          zIndex: 1,
-          alignItems: "center",
+          display: "flex",
           justifyContent: "center",
+          alignItems: "center",
+          bgcolor: "primary.main",
+          color: "white",
         }}
       >
         <Typography
           variant="h6"
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          gap={1}
+          sx={{ display: "flex", gap: 1, alignItems: "center" }}
         >
           <CreditScoreRounded />
           {title}

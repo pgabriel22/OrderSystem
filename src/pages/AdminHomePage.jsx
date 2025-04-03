@@ -3,10 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useMediaQuery, useTheme } from "@mui/material";
 import Footer from "../components/Footer";
 import AppBar from "../components/AppNavBar";
-import { Box, Typography, Card, CardActionArea, CardContent, Grid } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Card,
+  CardActionArea,
+  CardContent,
+  Grid,
+} from "@mui/material";
 import MenuListIcon from "../assets/menu-list.jpg";
 import OrderListIcon from "../assets/order-checkout.gif";
-
 
 const AdminHomePage = () => {
   const navigate = useNavigate();
@@ -14,11 +20,13 @@ const AdminHomePage = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box sx={{
-      display: "flex",
-      flexDirection: "column",
-      minHeight: "100vh",
-    }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <AppBar />
       <Box
         sx={{
@@ -32,13 +40,13 @@ const AdminHomePage = () => {
           p: 2, // Adds padding for better spacing on small screens
         }}
       >
-        <Typography 
+        <Typography
           variant={isMobile ? "h4" : "h2"} // Adjust text size for smaller screens
           sx={{
             textAlign: "center",
             mt: 4,
             mb: 4,
-            fontWeight: "bold"
+            fontWeight: "bold",
           }}
         >
           Hello Kukulkan what would you like to do?
@@ -46,11 +54,11 @@ const AdminHomePage = () => {
 
         <Grid container spacing={2} justifyContent="center">
           {/* Order List Card */}
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Grid xs={12} sm={6} md={4} lg={3}>
             <Card sx={{ textAlign: "center" }}>
-              <CardActionArea onClick={() => navigate("/order-list")}> 
+              <CardActionArea onClick={() => navigate("/order-list")}>
                 <CardContent>
-                <img
+                  <img
                     src={OrderListIcon}
                     alt="Order List"
                     style={{
@@ -66,9 +74,9 @@ const AdminHomePage = () => {
           </Grid>
 
           {/* Menu Buildup Card */}
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Grid xs={12} sm={6} md={4} lg={3}>
             <Card sx={{ textAlign: "center" }}>
-              <CardActionArea onClick={() => navigate("/menu-buildup")}> 
+              <CardActionArea onClick={() => navigate("/menu-buildup")}>
                 <CardContent>
                   <img
                     src={MenuListIcon}

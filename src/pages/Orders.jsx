@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-
-// import "./App.css";
+import React, { useState, useEffect, useCallback } from "react";
+import { Box, useMediaQuery } from "@mui/material";
 import OrderForm from "../components/OrderForm.jsx";
 import OrderColumn from "../components/OrderColumn";
 import PaymentStatusColumn from "../components/PaymentStatusColumn";
 import comboIcon from "../assets/cash.png";
 import singleIcon from "../assets/gcash.png";
 import Footer from "../components/Footer";
-import MenuBuildup from "./MenuBuildup.jsx";
-import AppBar from "../components/AppNavBar";
 import AppNavBar from "../components/AppNavBar";
 
-const oldOrders = localStorage.getItem("order");
-// console.log(oldOrders);
+const getStoredOrders = () => {
+  try {
+    return JSON.parse(localStorage.getItem("order")) || [];
+  } catch {
+    return [];
+  }
+};
 
 const Orders = () => {
-  const [order, setOrders] = useState(JSON.parse(oldOrders) || []);
+  const isMobile = useMediaQuery("(max-width: 900px)");
+  const [order, setOrders] = useState(getStoredOrders);
   const [isEditing, setIsEditing] = useState(null);
   const [tempOrder, setTempOrder] = useState({});
   const [formErrors, setFormErrors] = useState({
@@ -28,98 +29,132 @@ const Orders = () => {
     localStorage.setItem("order", JSON.stringify(order));
   }, [order]);
 
-  const handleDelete = (orderIndex) => {
-    const newOrder = order.filter((order, index) => index !== orderIndex);
-    setOrders(newOrder);
-  };
+  const handleDelete = useCallback(
+    (orderIndex) => {
+      setOrders((prevOrders) =>
+        prevOrders.filter((_, index) => index !== orderIndex)
+      );
+    },
+    [setOrders]
+  );
 
-  const handleEdit = (orderIndex) => {
-    setIsEditing(orderIndex);
-    setTempOrder({ ...order[orderIndex] });
-  };
+  const handleEdit = useCallback(
+    (orderIndex) => {
+      setIsEditing(orderIndex);
+      setTempOrder({ ...order[orderIndex] });
+    },
+    [order]
+  );
 
-  const handleStatusChange = (index, newStatus) => {
-    const updatedOrders = [...order];
-    updatedOrders[index].paymentStatus = newStatus;
-
-    setOrders(updatedOrders);
-    localStorage.setItem("order", JSON.stringify(updatedOrders));
-  };
+  const handleStatusChange = useCallback(
+    (index, newStatus) => {
+      setOrders((prevOrders) => {
+        const updatedOrders = [...prevOrders];
+        updatedOrders[index].paymentStatus = newStatus;
+        localStorage.setItem("order", JSON.stringify(updatedOrders));
+        return updatedOrders;
+      });
+    },
+    [setOrders]
+  );
 
   const handleCancel = () => {
     setIsEditing(null);
   };
 
   const handleUpdate = () => {
-    const errors = { order: { error: false, helperText: "" } };
-
     if (!tempOrder.order?.trim()) {
-      errors.order = {
-        error: true,
-        helperText: "Order is required",
-      };
-    }
-
-    setFormErrors(errors);
-
-    if (errors.order.error) {
+      setFormErrors({
+        order: { error: true, helperText: "Order is required" },
+      });
       return;
     }
 
-    const updatedOrder = [...order];
-    // updatedOrder[isEditing] = tempOrder;
-    updatedOrder[isEditing] = {
-      ...tempOrder,
-      paymentStatus: tempOrder.paymentStatus || "unpaid",
-    };
+    setOrders((prevOrders) => {
+      const updatedOrders = [...prevOrders];
+      updatedOrders[isEditing] = {
+        ...tempOrder,
+        paymentStatus: tempOrder.paymentStatus || "unpaid",
+      };
+      localStorage.setItem("order", JSON.stringify(updatedOrders));
+      return updatedOrders;
+    });
 
-    setOrders(updatedOrder);
     setIsEditing(null);
-    localStorage.setItem("order", JSON.stringify(updatedOrder));
   };
 
-  // console.log("order", order);
   return (
-    <div className="app">
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <AppNavBar />
-      <OrderForm setOrders={setOrders} />
-      <main className="app_main">
-        <OrderColumn
-          title="Cash"
-          icon={comboIcon}
-          order={order}
-          payment="cash"
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-          handleUpdate={handleUpdate}
-          handleCancel={handleCancel}
-          isEditing={isEditing}
-          tempOrder={tempOrder}
-          setTempOrder={setTempOrder}
-          formErrors={formErrors}
-          setFormErrors={setFormErrors}
-          handleStatusChange={handleStatusChange}
-        />
-        <OrderColumn
-          title="GCash"
-          icon={singleIcon}
-          order={order}
-          payment="gcash"
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-          handleUpdate={handleUpdate}
-          handleCancel={handleCancel}
-          isEditing={isEditing}
-          tempOrder={tempOrder}
-          setTempOrder={setTempOrder}
-          formErrors={formErrors}
-          setFormErrors={setFormErrors}
-          handleStatusChange={handleStatusChange}
-        />
-        <PaymentStatusColumn title="Payment Status" order={order} />
-      </main>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "80vh",
+          gap: 4,
+          px: 2,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: 3,
+            width: { xs: "90%", sm: 800, md: 800 },
+          }}
+        >
+          <OrderForm setOrders={setOrders} />
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              flexDirection: isMobile ? "column" : "row",
+              gap: 3,
+              justifyContent: "center",
+            }}
+          >
+            <OrderColumn
+              title="Cash"
+              icon={comboIcon}
+              order={order}
+              payment="cash"
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+              handleUpdate={handleUpdate}
+              handleCancel={handleCancel}
+              isEditing={isEditing}
+              tempOrder={tempOrder}
+              setTempOrder={setTempOrder}
+              formErrors={formErrors}
+              setFormErrors={setFormErrors}
+              handleStatusChange={handleStatusChange}
+            />
+            <OrderColumn
+              title="GCash"
+              icon={singleIcon}
+              order={order}
+              payment="gcash"
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+              handleUpdate={handleUpdate}
+              handleCancel={handleCancel}
+              isEditing={isEditing}
+              tempOrder={tempOrder}
+              setTempOrder={setTempOrder}
+              formErrors={formErrors}
+              setFormErrors={setFormErrors}
+              handleStatusChange={handleStatusChange}
+            />
+            <PaymentStatusColumn title="Payment Status" order={order} />
+          </Box>
+        </Box>
+      </Box>
       <Footer />
-    </div>
+    </Box>
   );
 };
 
