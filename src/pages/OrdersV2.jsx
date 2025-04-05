@@ -1,9 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Box, useMediaQuery } from "@mui/material";
-import OrderForm from "../components/OrderForm.jsx";
-import OrderColumn from "../components/OrderColumn";
-import PaymentStatusColumn from "../components/PaymentStatusColumn";
-import comboIcon from "../assets/cash.png";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  useMediaQuery,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import Footer from "../components/Footer";
 import AppNavBar from "../components/AppNavBar";
 
@@ -18,69 +25,68 @@ const getStoredOrders = () => {
 const OrdersV2 = () => {
   const isMobile = useMediaQuery("(max-width: 900px)");
   const [order, setOrders] = useState(getStoredOrders);
-  const [isEditing, setIsEditing] = useState(null);
-  const [tempOrder, setTempOrder] = useState({});
-  const [formErrors, setFormErrors] = useState({
-    order: { error: false, helperText: "" },
+  const [searchOrder, setSearchOrder] = useState('');
+  const [paymentFilter, setPaymentFilter] = useState('');
+
+  const handleSearchOrder = (event) => {
+    setSearchOrder(event.target.value);
+  };
+
+  const handlePaymentFilter = (event) => {
+    setPaymentFilter(event.target.value === 'All' ? '' : event.target.value); // Empty string for 'All'
+  };
+
+  const filteredOrder = order.filter((row) => {
+    const matchesSearch = row.orderBy.toLowerCase().includes(searchOrder.toLowerCase()) ||
+                          row.dishId.toLowerCase().includes(searchOrder.toLowerCase());
+    const matchesPaymentFilter = paymentFilter ? row.paymentStatus === paymentFilter : true;
+
+    return matchesSearch && matchesPaymentFilter;
   });
 
   useEffect(() => {
     localStorage.setItem("order", JSON.stringify(order));
   }, [order]);
 
-  const handleDelete = useCallback(
-    (orderIndex) => {
-      setOrders((prevOrders) =>
-        prevOrders.filter((_, index) => index !== orderIndex)
-      );
-    },
-    [setOrders]
-  );
-
-  const handleEdit = useCallback(
-    (orderIndex) => {
-      setIsEditing(orderIndex);
-      setTempOrder({ ...order[orderIndex] });
-    },
-    [order]
-  );
-
-  const handleStatusChange = useCallback(
-    (index, newStatus) => {
-      setOrders((prevOrders) => {
-        const updatedOrders = [...prevOrders];
-        updatedOrders[index].paymentStatus = newStatus;
-        localStorage.setItem("order", JSON.stringify(updatedOrders));
-        return updatedOrders;
-      });
-    },
-    [setOrders]
-  );
-
-  const handleCancel = () => {
-    setIsEditing(null);
-  };
-
-  const handleUpdate = () => {
-    if (!tempOrder.order?.trim()) {
-      setFormErrors({
-        order: { error: true, helperText: "Order is required" },
-      });
-      return;
-    }
-
+  const handleStatusChange = (id) => {
     setOrders((prevOrders) => {
-      const updatedOrders = [...prevOrders];
-      updatedOrders[isEditing] = {
-        ...tempOrder,
-        paymentStatus: tempOrder.paymentStatus || "unpaid",
-      };
-      localStorage.setItem("order", JSON.stringify(updatedOrders));
+      const updatedOrders = prevOrders.map((order) =>
+        order.id === id
+          ? {
+              ...order,
+              paymentStatus:
+                order.paymentStatus === "unpaid" ? "paid" : "unpaid",
+            }
+          : order
+      );
       return updatedOrders;
     });
-
-    setIsEditing(null);
   };
+
+  const orderColumns = [
+    { field: "id", headerName: "Order ID", width: 150 },
+    { field: "orderBy", headerName: "Customer", width: 250 },
+    { field: "dishId", headerName: "Order", width: 450 },
+    { field: "price", headerName: "Price", width: 100 },
+    {
+      field: "paymentStatus",
+      headerName: "Payment Status",
+      width: 150,
+      renderCell: (params) => {
+        return params.row.paymentStatus === "unpaid" ? "Unpaid" : "Paid";
+      },
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      renderCell: (params) => (
+        <Button size="small" onClick={() => handleStatusChange(params.row.id)}>
+          Mark as {params.row.paymentStatus === "unpaid" ? "Paid" : "Unpaid"}
+        </Button>
+      ),
+    },
+  ];
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -89,7 +95,7 @@ const OrdersV2 = () => {
         sx={{
           flexGrow: 1,
           display: "flex",
-          flexDirection: isMobile ? "column" : "row",
+          flexDirection: isMobile ? "row" : "column",
           justifyContent: "center",
           alignItems: "center",
           minHeight: "80vh",
@@ -97,43 +103,70 @@ const OrdersV2 = () => {
           px: 2,
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            gap: 3,
-            width: { xs: "90%", sm: 800, md: 800 },
-          }}
-        >
-          <OrderForm setOrders={setOrders} />
+        <Box>
+          <Typography>Order List Management</Typography>
           <Box
             sx={{
               display: "flex",
-              flexWrap: "wrap",
-              flexDirection: isMobile ? "column" : "row",
-              gap: 3,
-              justifyContent: "center",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 2,
             }}
+            gap={2}
+            padding={1}
+            margin={1}
           >
-            <OrderColumn
-              title="Cash"
-              icon={comboIcon}
-              order={order}
-              payment="cash"
-              handleEdit={handleEdit}
-              handleDelete={handleDelete}
-              handleUpdate={handleUpdate}
-              handleCancel={handleCancel}
-              isEditing={isEditing}
-              tempOrder={tempOrder}
-              setTempOrder={setTempOrder}
-              formErrors={formErrors}
-              setFormErrors={setFormErrors}
-              handleStatusChange={handleStatusChange}
-            />
-            <PaymentStatusColumn title="Payment Status" order={order} />
+            <TextField label="Search Order" value={searchOrder} onChange={handleSearchOrder} />
+            <FormControl fullWidth>
+              <InputLabel id="payment-status-label">Payment Status</InputLabel>
+              <Select
+                labelId="payment-status-label"
+                id="payment-status-label"
+                label="Payment Status"
+                value={paymentFilter}
+                onChange={handlePaymentFilter}
+              >
+                <MenuItem value="All">All</MenuItem>
+                <MenuItem value="unpaid">Unpaid</MenuItem>
+                <MenuItem value="paid">Paid</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            width: "100%",
+            flexDirection: isMobile ? "column" : "row",
+            gap: 3,
+            justifyContent: "center",
+          }}
+        >
+          {/* Conditionally render No Data message */}
+          {filteredOrder.length === 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: 300, // Adjust height as needed
+              }}
+            >
+              <Typography variant="h6" color="textSecondary">
+                No Orders Found
+              </Typography>
+            </Box>
+          ) : (
+            <DataGrid
+              rows={filteredOrder}
+              columns={orderColumns}
+              pageSize={25}
+              pagination
+              checkboxSelection
+            />
+          )}
         </Box>
       </Box>
       <Footer />

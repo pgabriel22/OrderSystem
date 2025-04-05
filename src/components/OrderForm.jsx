@@ -34,6 +34,7 @@ const OrderForm = ({ setOrders }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [orderData, setOrderData] = useState({
+    orderId: "",
     orderby: "",
     order: "",
     payment: "",
@@ -99,11 +100,19 @@ const OrderForm = ({ setOrders }) => {
 
     console.log("Order Submitted:", orderData);
 
-    const newOrder = {
-      ...orderData,
-      totalPrice: orderData.totalPrice,
-    };
+    // const newOrder = {
+    //   ...orderData,
+    //   totalPrice: orderData.totalPrice,
+    // };
 
+    const newOrder = {
+      id: Date.now(), // or crypto.randomUUID() if supported
+      orderBy: orderData.orderby,
+      dishId: orderData.order,
+      price: orderData.totalPrice,
+      paymentStatus: "unpaid",
+    };
+    
     setOrders((prev) => [...prev, newOrder]);
 
     setOrderData({
