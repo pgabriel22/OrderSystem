@@ -10,7 +10,7 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import { Edit, Delete, Check, Clear, Add} from "@mui/icons-material";
+import { Edit, Delete, Check, Clear, Add } from "@mui/icons-material";
 
 const DishCard = ({
   dishName,
