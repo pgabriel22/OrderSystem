@@ -56,7 +56,7 @@ const AdminHomePage = () => {
           {/* Order List Card */}
           <Grid xs={12} sm={6} md={4} lg={3}>
             <Card sx={{ textAlign: "center" }}>
-              <CardActionArea onClick={() => navigate("/order-list")}>
+              <CardActionArea onClick={() => navigate("/order-listv2")}>
                 <CardContent>
                   <img
                     src={OrderListIcon}
