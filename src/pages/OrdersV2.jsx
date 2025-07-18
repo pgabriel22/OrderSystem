@@ -25,22 +25,24 @@ const getStoredOrders = () => {
 const OrdersV2 = () => {
   const isMobile = useMediaQuery("(max-width: 900px)");
   const [order, setOrders] = useState(getStoredOrders);
-  const [searchOrder, setSearchOrder] = useState('');
-  const [paymentFilter, setPaymentFilter] = useState('');
+  const [searchOrder, setSearchOrder] = useState("");
+  const [paymentFilter, setPaymentFilter] = useState("");
 
   const handleSearchOrder = (event) => {
     setSearchOrder(event.target.value);
   };
 
   const handlePaymentFilter = (event) => {
-    setPaymentFilter(event.target.value === 'All' ? '' : event.target.value); // Empty string for 'All'
+    setPaymentFilter(event.target.value === "All" ? "" : event.target.value);
   };
 
   const filteredOrder = order.filter((row) => {
-    const matchesSearch = row.orderBy.toLowerCase().includes(searchOrder.toLowerCase()) ||
-                          row.dishId.toLowerCase().includes(searchOrder.toLowerCase());
-    const matchesPaymentFilter = paymentFilter ? row.paymentStatus === paymentFilter : true;
-
+    const matchesSearch =
+      row.orderBy.toLowerCase().includes(searchOrder.toLowerCase()) ||
+      row.dishId.toLowerCase().includes(searchOrder.toLowerCase());
+    const matchesPaymentFilter = paymentFilter
+      ? row.paymentStatus === paymentFilter
+      : true;
     return matchesSearch && matchesPaymentFilter;
   });
 
@@ -72,9 +74,8 @@ const OrdersV2 = () => {
       field: "paymentStatus",
       headerName: "Payment Status",
       width: 150,
-      renderCell: (params) => {
-        return params.row.paymentStatus === "unpaid" ? "Unpaid" : "Paid";
-      },
+      renderCell: (params) =>
+        params.row.paymentStatus === "unpaid" ? "Unpaid" : "Paid",
     },
     {
       field: "actions",
@@ -91,67 +92,70 @@ const OrdersV2 = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <AppNavBar />
+
       <Box
         sx={{
           flexGrow: 1,
-          display: "flex",
-          flexDirection: isMobile ? "row" : "column",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "80vh",
-          gap: 4,
           px: 2,
+          pt: 4,
+          pb: 6,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          minHeight: "calc(100vh - 64px - 80px)", // Adjust if AppBar/Footer height is different
         }}
       >
-        <Box>
-          <Typography>Order List Management</Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 2,
-            }}
-            gap={2}
-            padding={1}
-            margin={1}
-          >
-            <TextField label="Search Order" value={searchOrder} onChange={handleSearchOrder} />
-            <FormControl fullWidth>
-              <InputLabel id="payment-status-label">Payment Status</InputLabel>
-              <Select
-                labelId="payment-status-label"
-                id="payment-status-label"
-                label="Payment Status"
-                value={paymentFilter}
-                onChange={handlePaymentFilter}
-              >
-                <MenuItem value="All">All</MenuItem>
-                <MenuItem value="unpaid">Unpaid</MenuItem>
-                <MenuItem value="paid">Paid</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        </Box>
+        <Typography variant="h5" fontWeight="bold" mb={3}>
+          Order List Management
+        </Typography>
 
+        {/* Filter Section */}
         <Box
           sx={{
             display: "flex",
-            flexWrap: "wrap",
-            width: "100%",
             flexDirection: isMobile ? "column" : "row",
-            gap: 3,
-            justifyContent: "center",
+            gap: 2,
+            width: "100%",
+            maxWidth: 1200,
+            mb: 2,
           }}
         >
-          {/* Conditionally render No Data message */}
+          <TextField
+            label="Search Order"
+            value={searchOrder}
+            onChange={handleSearchOrder}
+            fullWidth
+          />
+          <FormControl fullWidth>
+            <InputLabel id="payment-status-label">Payment Status</InputLabel>
+            <Select
+              labelId="payment-status-label"
+              label="Payment Status"
+              value={paymentFilter}
+              onChange={handlePaymentFilter}
+            >
+              <MenuItem value="All">All</MenuItem>
+              <MenuItem value="unpaid">Unpaid</MenuItem>
+              <MenuItem value="paid">Paid</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        {/* Data Table Section */}
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 1200,
+            height: 600, // Set fixed height for DataGrid
+          }}
+        >
           {filteredOrder.length === 0 ? (
             <Box
               sx={{
+                height: "100%",
                 display: "flex",
-                justifyContent: "center",
                 alignItems: "center",
-                height: 300, // Adjust height as needed
+                justifyContent: "center",
               }}
             >
               <Typography variant="h6" color="textSecondary">
@@ -169,7 +173,12 @@ const OrdersV2 = () => {
           )}
         </Box>
       </Box>
-      <Footer />
+
+      <Box
+        sx={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 1000 }}
+      >
+        <Footer />
+      </Box>
     </Box>
   );
 };

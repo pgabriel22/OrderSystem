@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
-  IconButton,
   useMediaQuery,
   useTheme,
   Typography,
 } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
 import Footer from "../components/Footer";
 import AppBar from "../components/AppNavBar";
-import DishCrudModal from "../components/DishCrudModal.jsx";
-import DishList from "../components/DishList.jsx";
+import DishCrudModal from "../components/DishCrudModal";
+import DishList from "../components/DishList";
 
 const MenuBuildup = () => {
-  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -23,46 +19,31 @@ const MenuBuildup = () => {
   const [dishes, setDishes] = useState([]);
   const [editingDish, setEditingDish] = useState(null);
 
-  // Load dishes from localStorage on initial load
   useEffect(() => {
     const savedDishes = JSON.parse(localStorage.getItem("dishes")) || [];
-    if (Array.isArray(savedDishes)) {
-      setDishes(savedDishes);
-    } else {
-      setDishes([]); // Fallback to empty array
-    }
+    setDishes(Array.isArray(savedDishes) ? savedDishes : []);
   }, []);
 
-  // Function to close the modal
   const handleCloseModal = () => {
     setOpenModal(false);
-    setEditingDish(null); // Reset editingDish when modal is closed
+    setEditingDish(null);
   };
 
-  // Function to handle dish submission (create or edit)
   const handleSubmitDish = (dishData) => {
-    let updatedDishes;
-    if (editingDish) {
-      // Edit existing dish
-      updatedDishes = dishes.map((dish) =>
-        dish.id === dishData.id ? dishData : dish
-      );
-    } else {
-      // Add new dish
-      updatedDishes = [...dishes, dishData];
-    }
+    const updatedDishes = editingDish
+      ? dishes.map((dish) => (dish.id === dishData.id ? dishData : dish))
+      : [...dishes, dishData];
+
     setDishes(updatedDishes);
     localStorage.setItem("dishes", JSON.stringify(updatedDishes));
-    handleCloseModal(); // Close the modal after submission
+    handleCloseModal();
   };
 
-  // Function to handle editing a dish
   const handleEditDish = (dish) => {
-    setEditingDish(dish); // Set the dish data for editing
-    setOpenModal(true); // Open the modal in edit mode
+    setEditingDish(dish);
+    setOpenModal(true);
   };
 
-  // Function to handle deleting a dish
   const handleDeleteDish = (id) => {
     const updatedDishes = dishes.filter((d) => d.id !== id);
     setDishes(updatedDishes);
@@ -70,34 +51,89 @@ const MenuBuildup = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <AppBar />
-      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 4, p: 2 }}>
-        <IconButton onClick={() => navigate("/admin-home")}>
-          <ArrowBack />
-        </IconButton>
-        <Typography>Menu Builder</Typography>
-        <Button onClick={() => setOpenModal(true)} variant="contained">
-          Add Dish
-        </Button>
-
-        <DishCrudModal
-          open={openModal}
-          onClose={handleCloseModal}
-          mode={editingDish ? "edit" : "create"}
-          initialData={editingDish}
-          onSubmit={handleSubmitDish}
-        />
+    <Box sx={{ height: "100vh", overflow: "hidden" }}>
+      {/* Fixed AppBar */}
+      <Box sx={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000 }}>
+        <AppBar />
       </Box>
-      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", p: 2 }}>
+
+      {/* Header Controls */}
+      <Box
+        sx={{
+          position: "fixed",
+          top: "100px",
+          left: 0,
+          right: 0,
+          zIndex: 999,
+          bgcolor: "#fff",
+          px: 2,
+          py: 1,
+          borderBottom: "1px solid #ddd",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Typography
+            variant={isMobile ? "h5" : "h4"}
+            sx={{ fontWeight: "bold", textAlign: "center" }}
+          >
+            Menu Builder
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setEditingDish(null);
+              setOpenModal(true);
+            }}
+          >
+            Add Dish
+          </Button>
+        </Box>
+      </Box>
+
+      {/* Scrollable Dish List */}
+      <Box
+        sx={{
+          pt: "170px",
+          pb: "80px",
+          height: "100%",
+          overflowY: "auto",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          "&::-webkit-scrollbar": { display: "none" },
+        }}
+      >
         <DishList
           dishes={dishes}
-          onEdit={handleEditDish} // Pass handleEditDish for editing
-          onDelete={handleDeleteDish} // Pass handleDeleteDish for deleting
+          onEdit={handleEditDish}
+          onDelete={handleDeleteDish}
           mode="admin"
+          fixedTabs={true}
         />
       </Box>
-      <Footer />
+
+      {/* Fixed Footer */}
+      <Box
+        sx={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 1000 }}
+      >
+        <Footer />
+      </Box>
+
+      {/* Modal */}
+      <DishCrudModal
+        open={openModal}
+        onClose={handleCloseModal}
+        mode={editingDish ? "edit" : "create"}
+        initialData={editingDish}
+        onSubmit={handleSubmitDish}
+      />
     </Box>
   );
 };

@@ -3,11 +3,11 @@ import { Modal, Box, Typography, Button } from "@mui/material";
 import DishForm from "./DishForm";
 
 const DishCrudModal = ({ open, onClose, mode, initialData, onSubmit }) => {
-  const isEditMode = mode === "edit"; // Check if it's edit mode
+  const isEditMode = mode === "edit";
 
   const handleSubmit = (dishData) => {
-    onSubmit(dishData); // Pass dishData to parent component for update or create
-    onClose(); // Close the modal after submission
+    onSubmit(dishData);
+    onClose();
   };
 
   return (
@@ -22,24 +22,23 @@ const DishCrudModal = ({ open, onClose, mode, initialData, onSubmit }) => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           bgcolor: "white",
-          border: "2px solid #000",
+          borderRadius: 2,
+          boxShadow: 24,
           p: 4,
         }}
       >
-        <Typography variant="h6">{isEditMode ? "Edit Dish" : "Create New Dish"}</Typography>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          {isEditMode ? "Edit Dish" : "Create New Dish"}
+        </Typography>
 
-        <DishForm
-          setDish={handleSubmit} // Send the data back to parent on submit
-          initialData={initialData} // Pass the initial data to pre-fill the form
-        />
+        <DishForm setDish={handleSubmit} initialData={initialData} />
 
-        <Button onClick={onClose} sx={{ marginTop: 2 }}>
+        <Button onClick={onClose} sx={{ mt: 2 }}>
           Close
         </Button>
       </Box>
     </Modal>
   );
 };
-
 
 export default DishCrudModal;

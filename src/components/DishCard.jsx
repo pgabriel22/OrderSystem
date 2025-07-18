@@ -33,33 +33,35 @@ const DishCard = ({
           transform: "scale(1.02)",
           boxShadow: 6,
         },
-        width: "100%", // Full width for responsiveness
-        maxWidth: 300, // Uniform card width of 300px max
-        height: "auto", // Auto height based on content
+        width: "100%",
+        maxWidth: 300,
+        height: 330, // 🔒 Fixed total height
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        overflow: "hidden", // Prevent overflow
+        overflow: "hidden",
       }}
     >
       {imageUrl && (
         <CardMedia
           component="img"
-          height="160" // Fixed height for the image
           image={imageUrl}
           alt={dishName}
           sx={{
-            // objectFit: "cover", // Ensures the image doesn't stretch/distort
-            width: "100%", // Make sure image width fills the container
+            height: 160, // 🔒 Fixed image height
+            width: "100%",
+            objectFit: "cover", // 📸 Crop to fill, not stretch
           }}
         />
       )}
-      <CardContent>
+
+      <CardContent sx={{ flexGrow: 1, minHeight: 120 }}>
         <Box
           sx={{
             display: "flex",
-            flexWrap: "wrap",
             justifyContent: "space-between",
+            flexWrap: "wrap",
+            mb: 1,
           }}
         >
           <Typography variant="body1" sx={{ fontWeight: "bold" }}>
@@ -69,44 +71,40 @@ const DishCard = ({
             ₱{price}
           </Typography>
         </Box>
-        <Typography variant="body2">{dishType}</Typography>
-        {isAvailable ? (
-          <Check sx={{ color: "green" }} />
-        ) : (
-          <Clear sx={{ color: "red" }} />
-        )}
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          {dishType}
+        </Typography>
+        <Box>
+          {isAvailable ? (
+            <Check sx={{ color: "green" }} />
+          ) : (
+            <Clear sx={{ color: "red" }} />
+          )}
+        </Box>
       </CardContent>
 
-      {mode === "customer" ? (
-        <CardActions sx={{ justifyContent: "flex-end" }}>
+      <CardActions sx={{ justifyContent: "flex-end" }}>
+        {mode === "customer" ? (
           <Tooltip title="Add to Cart">
             <Button variant="contained" aria-label="Add to Cart">
               <Add /> Add to Cart
             </Button>
           </Tooltip>
-        </CardActions>
-      ) : (
-        <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Tooltip title="Edit">
-            <IconButton
-              variant="contained"
-              onClick={onEdit}
-              aria-label="Edit Dish"
-            >
-              <Edit />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete">
-            <IconButton
-              variant="contained"
-              onClick={onDelete}
-              aria-label="Delete Dish"
-            >
-              <Delete />
-            </IconButton>
-          </Tooltip>
-        </CardActions>
-      )}
+        ) : (
+          <>
+            <Tooltip title="Edit">
+              <IconButton onClick={onEdit} aria-label="Edit Dish">
+                <Edit />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <IconButton onClick={onDelete} aria-label="Delete Dish">
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+      </CardActions>
     </Card>
   );
 };

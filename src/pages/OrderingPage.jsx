@@ -1,58 +1,66 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
+import React, { useEffect, useState } from "react";
+import { Box, useMediaQuery } from "@mui/material";
 import AppBar from "../components/AppNavBar";
-import {
-  Box,
-  useMediaQuery,
-} from "@mui/material";
-import Waiter from "../assets/taking-order.gif";
+import Footer from "../components/Footer";
 import DishList from "../components/DishList";
+import Waiter from "../assets/taking-order.gif";
 
 const OrderingPage = () => {
-  const navigate = useNavigate();
-  const isMobile = useMediaQuery("(max-width: 900px)"); // Adjust layout based on screen width
+  const isMobile = useMediaQuery("(max-width: 900px)");
   const [dishes, setDishes] = useState([]);
 
-  // Load dishes from localStorage on initial load
   useEffect(() => {
     const savedDishes = JSON.parse(localStorage.getItem("dishes")) || [];
-    if (Array.isArray(savedDishes)) {
-      setDishes(savedDishes);
-    } else {
-      setDishes([]); // Fallback to empty array
-    }
+    setDishes(Array.isArray(savedDishes) ? savedDishes : []);
   }, []);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
-      <AppBar />
+    <>
+      {/* Fixed Nav */}
       <Box
         sx={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          gap: 4,
-          px: 2, // Add padding for better spacing
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
         }}
       >
-        {/* Responsive Image */}
+        <AppBar />
+      </Box>
+
+      {/* Fixed Footer */}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+        }}
+      >
+        <Footer />
+      </Box>
+
+      {/* Main content */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          height: "100vh",
+          pt: "100px", // adjust based on your AppBar height
+          pb: "40px", // adjust based on your Footer height
+          overflow: "hidden",
+        }}
+      >
+        {/* Left image */}
         <Box
           sx={{
-            flex: 1,
+            width: isMobile ? "100%" : "50%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            maxWidth: "100%",
+            bgcolor: "#fff3e0",
           }}
         >
           <img
@@ -60,31 +68,30 @@ const OrderingPage = () => {
             alt="Taking Order"
             style={{
               maxWidth: "100%",
-              height: isMobile ? "300px" : "500px", // Reduce size on mobile
+              height: isMobile ? "250px" : "100%",
               objectFit: "contain",
             }}
           />
         </Box>
 
-        {/* Dish List Section */}
+        {/* Right dish list (scrollable) */}
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            gap: 3,
-            width: isMobile ? "100%" : "80%", // Adjust width dynamically for mobile
-            maxWidth: 800, // Ensure there's a max width for larger screens
+            width: isMobile ? "100%" : "50%",
+            overflowY: "auto",
+            px: 2,
+            py: 1,
+            scrollbarWidth: "none", // Firefox
+            msOverflowStyle: "none", // IE/Edge
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari, Edge
+            },
           }}
         >
-          <DishList
-            dishes={dishes}
-            mode="customer"
-          />
+          <DishList dishes={dishes} mode="customer" />
         </Box>
       </Box>
-      <Footer />
-    </Box>
+    </>
   );
 };
 

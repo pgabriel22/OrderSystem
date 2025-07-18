@@ -15,3 +15,16 @@
   width: 33.33%;
   margin: 20px;
 }
+
+/* index.css */
+.scroll-hide {
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Edge Legacy */
+}
+
+.scroll-hide::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important; /* Chrome, Safari, Edge Chromium */
+}
