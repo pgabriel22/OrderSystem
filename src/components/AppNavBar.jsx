@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   IconButton,
   Box,
@@ -13,8 +13,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Badge,
 } from "@mui/material";
 import OrderLogo from "../assets/okb-logo.png";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useLocalCart } from "../hooks/useLocalCart";
 
 const AppNavBar = () => {
   const navigate = useNavigate();
@@ -47,11 +50,15 @@ const AppNavBar = () => {
     }
   };
 
+  const isOrderingPage = location.pathname === "/order-create";
+
   const handleLogout = () => {
     setMode(null);
     localStorage.removeItem("mode");
     navigate("/");
   };
+
+  const { getCartCount } = useLocalCart();
 
   return (
     <AppBar
@@ -87,6 +94,21 @@ const AppNavBar = () => {
           <Button variant="text" sx={{ color: "white" }} onClick={handleLogout}>
             Logout
           </Button>
+        )}
+
+        {/*Cart Button */}
+        {isOrderingPage && (
+          <Link to="/cart">
+            <IconButton
+              color="inherit"
+              aria-label="cart"
+              sx={{ position: "absolute", top: 25, right: 16 }}
+            >
+              <Badge badgeContent={getCartCount()} color="error">
+                <ShoppingCartIcon style={{ color: "white" }} />
+              </Badge>
+            </IconButton>
+          </Link>
         )}
 
         {/* Login Modal */}

@@ -11,6 +11,7 @@ import {
   Button,
 } from "@mui/material";
 import { Edit, Delete, Check, Clear, Add } from "@mui/icons-material";
+import { useLocalCart } from "../hooks/useLocalCart";
 
 const DishCard = ({
   dishName,
