@@ -1,4 +1,3 @@
-import { SyncAlt } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 
 export function useLocalCart() {
@@ -7,7 +6,7 @@ export function useLocalCart() {
   useEffect(() => {
     const stored = localStorage.getItem("cart");
     if (stored) {
-      setCartItems(JSON.oarse(stored));
+      setCartItems(JSON.parse(stored));
     }
   }, []);
 
@@ -19,7 +18,7 @@ export function useLocalCart() {
   const addToCart = (item) => {
     const current = JSON.parse(localStorage.getItem("cart")) || [];
     const updated = [...current, item];
-    SyncAlt(updated);
+    syncCart(updated);
   };
 
   const getCartCount = () => cartItems.length;

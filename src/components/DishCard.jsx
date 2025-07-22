@@ -11,9 +11,10 @@ import {
   Button,
 } from "@mui/material";
 import { Edit, Delete, Check, Clear, Add } from "@mui/icons-material";
-import { useLocalCart } from "../hooks/useLocalCart";
+import { useCart } from "../context/CartContext";
 
 const DishCard = ({
+  id,
   dishName,
   dishType,
   price,
@@ -23,6 +24,13 @@ const DishCard = ({
   onDelete,
   mode,
 }) => {
+  const { addToCart } = useCart();
+
+  const dish = { id, dishName, dishType, price, isAvailable, imageUrl };
+
+  const onAddToCart = () => {
+    addToCart(dish);
+  };
   return (
     <Card
       sx={{
@@ -87,7 +95,20 @@ const DishCard = ({
       <CardActions sx={{ justifyContent: "flex-end" }}>
         {mode === "customer" ? (
           <Tooltip title="Add to Cart">
-            <Button variant="contained" aria-label="Add to Cart">
+            <Button
+              variant="contained"
+              aria-label="Add to Cart"
+              onClick={() =>
+                addToCart({
+                  id,
+                  dishName,
+                  dishType,
+                  price,
+                  isAvailable,
+                  imageUrl,
+                })
+              }
+            >
               <Add /> Add to Cart
             </Button>
           </Tooltip>

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Box, useMediaQuery } from "@mui/material";
-import AppBar from "../components/AppNavBar";
+import { Box, useMediaQuery, Snackbar, Alert, Drawer} from "@mui/material";
+import AppNavBar from "../components/AppNavBar";
 import Footer from "../components/Footer";
 import DishList from "../components/DishList";
 import Waiter from "../assets/taking-order.gif";
+import { useLocalCart } from "../hooks/useLocalCart";
+import CartDrawer from "../components/CartDrawer";
 
-const OrderingPage = () => {
+const OrderingPage = ({openDrawer, setOpenDrawer}) => {
   const isMobile = useMediaQuery("(max-width: 900px)");
   const [dishes, setDishes] = useState([]);
+  const { addToCart } = useLocalCart();
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     const savedDishes = JSON.parse(localStorage.getItem("dishes")) || [];
@@ -16,18 +20,6 @@ const OrderingPage = () => {
 
   return (
     <>
-      {/* Fixed Nav */}
-      <Box
-        sx={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1000,
-        }}
-      >
-        <AppBar />
-      </Box>
 
       {/* Fixed Footer */}
       <Box
@@ -88,9 +80,30 @@ const OrderingPage = () => {
             },
           }}
         >
-          <DishList dishes={dishes} mode="customer" />
+          <DishList dishes={dishes} mode="customer" onAddToCart={addToCart} />
         </Box>
       </Box>
+
+      {/*Cart Drawer*/}
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+      >
+        <CartDrawer onClose={() => setOpenDrawer(false)}
+        setShowToast={setShowToast} />
+      </Drawer>
+
+      <Snackbar
+        open={showToast}
+        autoHideDuration={4000}
+        onClose={() => setShowToast(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert severity="success" onClose={() => setShowToast(false)}>
+          Order placed successfully!
+        </Alert>
+      </Snackbar>
     </>
   );
 };

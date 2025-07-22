@@ -14,34 +14,36 @@ import {
   Select,
   MenuItem,
   Badge,
+  Drawer,
 } from "@mui/material";
 import OrderLogo from "../assets/okb-logo.png";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useLocalCart } from "../hooks/useLocalCart";
+import { useCart } from "../context/CartContext";
+import CartDrawer from "./CartDrawer";
 
-const AppNavBar = () => {
+const AppNavBar = ({ setOpenDrawer }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [open, setOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState(null); // "admin" or "customer"
   const [role, setRole] = useState("admin"); // selected in login
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // Load mode from localStorage on mount
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+    // Load mode from localStorage on mount
   useEffect(() => {
     const savedMode = localStorage.getItem("mode");
     if (savedMode) setMode(savedMode);
   }, []);
 
-  const openModal = () => setOpen(true);
-  const closeModal = () => setOpen(false);
-
   const handleLogin = () => {
     setMode(role);
     localStorage.setItem("mode", role);
-    closeModal();
+    handleCloseModal();
 
     if (role === "admin") {
       navigate("/admin-home");
@@ -58,11 +60,11 @@ const AppNavBar = () => {
     navigate("/");
   };
 
-  const { getCartCount } = useLocalCart();
+  const { getCartCount } = useCart();
 
   return (
     <AppBar
-      position="static"
+      position="fixed"
       sx={{
         background: "linear-gradient(90deg, #ff5722 30%, #ff9800 90%)",
       }}
@@ -84,7 +86,7 @@ const AppNavBar = () => {
 
         {/* Show login button only on homepage */}
         {location.pathname === "/" && (
-          <Button variant="text" sx={{ color: "white" }} onClick={openModal}>
+          <Button variant="text" sx={{ color: "white" }} onClick={handleOpenModal}>
             Login
           </Button>
         )}
@@ -98,21 +100,20 @@ const AppNavBar = () => {
 
         {/*Cart Button */}
         {isOrderingPage && (
-          <Link to="/cart">
             <IconButton
               color="inherit"
               aria-label="cart"
               sx={{ position: "absolute", top: 25, right: 16 }}
+              onClick={() => setOpenDrawer(true)}
             >
               <Badge badgeContent={getCartCount()} color="error">
                 <ShoppingCartIcon style={{ color: "white" }} />
               </Badge>
             </IconButton>
-          </Link>
         )}
 
         {/* Login Modal */}
-        <Modal open={open} onClose={closeModal}>
+        <Modal open={isModalOpen} onClose={handleCloseModal}>
           <Box
             sx={{
               display: "flex",
@@ -170,7 +171,7 @@ const AppNavBar = () => {
               <Button variant="contained" onClick={handleLogin}>
                 Login
               </Button>
-              <Button variant="outlined" onClick={closeModal}>
+              <Button variant="outlined" onClick={handleCloseModal}>
                 Cancel
               </Button>
             </Box>
