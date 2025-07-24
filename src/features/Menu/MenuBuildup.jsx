@@ -6,10 +6,10 @@ import {
   useTheme,
   Typography,
 } from "@mui/material";
-import Footer from "../components/Footer";
-import AppBar from "../components/AppNavBar";
-import DishCrudModal from "../components/DishCrudModal";
-import DishList from "../components/DishList";
+import Footer from "../../shared/components/Footer";
+import AppBar from "../../shared/components/AppNavBar";
+import DishCrudModal from "../../shared/components/DishCrudModal";
+import DishList from "../../shared/components/DishList";
 
 const MenuBuildup = () => {
   const theme = useTheme();

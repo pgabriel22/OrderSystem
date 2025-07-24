@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
-import AppBar from "../components/AppNavBar";
+import Footer from "../../shared/components/Footer";
+import AppBar from "../../shared/components/AppNavBar";
 import { Box, Typography, Button, useMediaQuery } from "@mui/material";
 import { AddCard } from "@mui/icons-material";
-import OnlineOrder from "../assets/online-ordering.gif";
+import OnlineOrder from "../../assets/online-ordering.gif";
 
 const HomePage = () => {
   const navigate = useNavigate();

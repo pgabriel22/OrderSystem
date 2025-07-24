@@ -11,8 +11,8 @@ import {
   InputLabel,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Footer from "../components/Footer";
-import AppNavBar from "../components/AppNavBar";
+import Footer from "../../shared/components/Footer";
+import AppNavBar from "../../shared/components/AppNavBar";
 
 const getStoredOrders = () => {
   try {

@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery, useTheme } from "@mui/material";
-import Footer from "../components/Footer";
-import AppBar from "../components/AppNavBar";
+import Footer from "../../shared/components/Footer";
+import AppBar from "../../shared/components/AppNavBar";
 import {
   Box,
   Typography,
@@ -11,8 +11,8 @@ import {
   CardContent,
   Grid,
 } from "@mui/material";
-import MenuListIcon from "../assets/menu-list.jpg";
-import OrderListIcon from "../assets/order-checkout.gif";
+import MenuListIcon from "../../assets/menu-list.jpg";
+import OrderListIcon from "../../assets/order-checkout.gif";
 
 const AdminHomePage = () => {
   const navigate = useNavigate();

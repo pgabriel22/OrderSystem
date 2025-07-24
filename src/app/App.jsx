@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 
-import MenuBuildup from "./pages/MenuBuildup.jsx";
-import Orders from "./pages/Orders.jsx";
-import AdminHomePage from "./pages/AdminHomePage.jsx";
-import HomePage from "./pages/HomePage.jsx";
-import OrderingPage from "./pages/OrderingPage.jsx";
-import OrdersV2 from "./pages/OrdersV2.jsx";
-import AppNavBar from "./components/AppNavBar.jsx";
+import MenuBuildup from "../features/Menu/MenuBuildup.jsx";
+import Orders from "../features/Orders/Orders.jsx";
+import AdminHomePage from "../features/Home/AdminHomePage.jsx";
+import HomePage from "../features/Home/HomePage.jsx";
+import OrderingPage from "../features/Cart/OrderingPage.jsx";
+import OrdersV2 from "../features/Orders/OrdersV2.jsx";
+import AppNavBar from "../shared/components/AppNavBar.jsx";
 
 const App = () => {
   const [openDrawer, setOpenDrawer] = useState(false);

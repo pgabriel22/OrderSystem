@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Box, useMediaQuery } from "@mui/material";
-import OrderForm from "../components/OrderForm.jsx";
-import OrderColumn from "../components/OrderColumn";
-import PaymentStatusColumn from "../components/PaymentStatusColumn";
-import comboIcon from "../assets/cash.png";
-import singleIcon from "../assets/gcash.png";
-import Footer from "../components/Footer";
-import AppNavBar from "../components/AppNavBar";
+import OrderForm from "../../shared/components/OrderForm.jsx";
+import OrderColumn from "../../shared/components/OrderColumn";
+import PaymentStatusColumn from "../../shared/components/PaymentStatusColumn";
+import comboIcon from "../../assets/cash.png";
+import singleIcon from "../../assets/gcash.png";
+import Footer from "../../shared/components/Footer";
+import AppNavBar from "../../shared/components/AppNavBar";
 
 const getStoredOrders = () => {
   try {

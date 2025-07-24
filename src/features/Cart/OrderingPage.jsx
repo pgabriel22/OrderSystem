@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, useMediaQuery, Snackbar, Alert, Drawer} from "@mui/material";
-import AppNavBar from "../components/AppNavBar";
-import Footer from "../components/Footer";
-import DishList from "../components/DishList";
-import Waiter from "../assets/taking-order.gif";
-import { useLocalCart } from "../hooks/useLocalCart";
-import CartDrawer from "../components/CartDrawer";
+import { Box, useMediaQuery, Snackbar, Alert, Drawer } from "@mui/material";
+import AppNavBar from "../../shared/components/AppNavBar";
+import Footer from "../../shared/components/Footer";
+import DishList from "../../shared/components/DishList";
+import Waiter from "../../assets/taking-order.gif";
+import { useLocalCart } from "../../shared/hooks/useLocalCart";
+import CartDrawer from "./components/CartDrawer";
 
-const OrderingPage = ({openDrawer, setOpenDrawer}) => {
+const OrderingPage = ({ openDrawer, setOpenDrawer }) => {
   const isMobile = useMediaQuery("(max-width: 900px)");
   const [dishes, setDishes] = useState([]);
   const { addToCart } = useLocalCart();
@@ -20,7 +20,6 @@ const OrderingPage = ({openDrawer, setOpenDrawer}) => {
 
   return (
     <>
-
       {/* Fixed Footer */}
       <Box
         sx={{
@@ -90,8 +89,10 @@ const OrderingPage = ({openDrawer, setOpenDrawer}) => {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
-        <CartDrawer onClose={() => setOpenDrawer(false)}
-        setShowToast={setShowToast} />
+        <CartDrawer
+          onClose={() => setOpenDrawer(false)}
+          setShowToast={setShowToast}
+        />
       </Drawer>
 
       <Snackbar

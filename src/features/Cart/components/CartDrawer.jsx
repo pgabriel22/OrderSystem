@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../../shared/context/CartContext";
 import {
   Box,
   Typography,

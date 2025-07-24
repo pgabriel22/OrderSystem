@@ -16,10 +16,10 @@ import {
   Badge,
   Drawer,
 } from "@mui/material";
-import OrderLogo from "../assets/okb-logo.png";
+import OrderLogo from "../../assets/okb-logo.png";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "../context/CartContext";
-import CartDrawer from "./CartDrawer";
+import CartDrawer from "../../features/Cart/components/CartDrawer";
 
 const AppNavBar = ({ setOpenDrawer }) => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const AppNavBar = ({ setOpenDrawer }) => {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-    // Load mode from localStorage on mount
+  // Load mode from localStorage on mount
   useEffect(() => {
     const savedMode = localStorage.getItem("mode");
     if (savedMode) setMode(savedMode);
@@ -86,7 +86,11 @@ const AppNavBar = ({ setOpenDrawer }) => {
 
         {/* Show login button only on homepage */}
         {location.pathname === "/" && (
-          <Button variant="text" sx={{ color: "white" }} onClick={handleOpenModal}>
+          <Button
+            variant="text"
+            sx={{ color: "white" }}
+            onClick={handleOpenModal}
+          >
             Login
           </Button>
         )}
@@ -100,16 +104,16 @@ const AppNavBar = ({ setOpenDrawer }) => {
 
         {/*Cart Button */}
         {isOrderingPage && (
-            <IconButton
-              color="inherit"
-              aria-label="cart"
-              sx={{ position: "absolute", top: 25, right: 16 }}
-              onClick={() => setOpenDrawer(true)}
-            >
-              <Badge badgeContent={getCartCount()} color="error">
-                <ShoppingCartIcon style={{ color: "white" }} />
-              </Badge>
-            </IconButton>
+          <IconButton
+            color="inherit"
+            aria-label="cart"
+            sx={{ position: "absolute", top: 25, right: 16 }}
+            onClick={() => setOpenDrawer(true)}
+          >
+            <Badge badgeContent={getCartCount()} color="error">
+              <ShoppingCartIcon style={{ color: "white" }} />
+            </Badge>
+          </IconButton>
         )}
 
         {/* Login Modal */}
