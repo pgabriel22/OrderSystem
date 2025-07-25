@@ -16,8 +16,18 @@ import AppNavBar from "../../shared/components/AppNavBar";
 
 const getStoredOrders = () => {
   try {
-    return JSON.parse(localStorage.getItem("order")) || [];
-  } catch {
+    const raw = JSON.parse(localStorage.getItem("orders")) || [];
+    // console.log("Raw localStorage data:", raw); //
+
+    if (!Array.isArray(raw)) return [];
+
+    return raw.map((order) => ({
+      ...order,
+      paymentStatus: order.paymentStatus || "unpaid",
+      items: Array.isArray(order.items) ? order.items : [],
+    }));
+  } catch (err) {
+    console.error("Failed to parse orders:", err);
     return [];
   }
 };
@@ -38,17 +48,15 @@ const OrdersV2 = () => {
 
   const filteredOrder = order.filter((row) => {
     const matchesSearch =
-      row.orderBy.toLowerCase().includes(searchOrder.toLowerCase()) ||
-      row.dishId.toLowerCase().includes(searchOrder.toLowerCase());
+      row.customerName?.toLowerCase().includes(searchOrder.toLowerCase()) ||
+      row.items?.some((item) =>
+        row.dishName?.toLowerCase().includes(searchOrder.toLowerCase())
+      );
     const matchesPaymentFilter = paymentFilter
       ? row.paymentStatus === paymentFilter
       : true;
     return matchesSearch && matchesPaymentFilter;
   });
-
-  useEffect(() => {
-    localStorage.setItem("order", JSON.stringify(order));
-  }, [order]);
 
   const handleStatusChange = (id) => {
     setOrders((prevOrders) => {
@@ -65,11 +73,63 @@ const OrdersV2 = () => {
     });
   };
 
+  const handleExportSummary = () => {
+    const summaryMap = {};
+    let grandTotal = 0;
+
+    order.forEach((order) => {
+      (order.items || []).forEach((item) => {
+        const name = item.dishName || "Unnamed Dish";
+        const qty = parseInt(item.quantity) || 0;
+        const price = parseFloat(item.price) || 0;
+
+        summaryMap[name] = (summaryMap[name] || 0) + qty;
+        grandTotal += qty * price;
+      });
+    });
+
+    const lines = Object.entries(summaryMap)
+      .map(([dish, count]) => `${dish} - ${count}`)
+      .join("\n");
+
+    const content = `${lines}\n\nGrand Total: ₱${grandTotal.toFixed(2)}`;
+
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "order_summary.txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const orderColumns = [
     { field: "id", headerName: "Order ID", width: 150 },
-    { field: "orderBy", headerName: "Customer", width: 250 },
-    { field: "dishId", headerName: "Order", width: 450 },
-    { field: "price", headerName: "Price", width: 100 },
+    { field: "customerName", headerName: "Customer", width: 250 },
+    {
+      field: "items",
+      headerName: "Order",
+      width: 450,
+      renderCell: (params) =>
+        Array.isArray(params.row.items)
+          ? params.row.items
+              .map((item) => `${item.dishName} x${item.quantity}`)
+              .join(", ")
+          : "No items",
+    },
+    {
+      field: "price",
+      headerName: "Price",
+      width: 100,
+      renderCell: (params) => {
+        const total = (params.row.items || []).reduce((sum, item) => {
+          const price = parseFloat(item.price || 0);
+          const qty = parseInt(item.quantity || 0);
+          return sum + price * qty;
+        }, 0);
+        return `₱${total.toFixed(2)}`;
+      },
+    },
     {
       field: "paymentStatus",
       headerName: "Payment Status",
@@ -97,7 +157,7 @@ const OrdersV2 = () => {
         sx={{
           flexGrow: 1,
           px: 2,
-          pt: 4,
+          pt: 16,
           pb: 6,
           display: "flex",
           flexDirection: "column",
@@ -139,6 +199,20 @@ const OrdersV2 = () => {
               <MenuItem value="paid">Paid</MenuItem>
             </Select>
           </FormControl>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            maxWidth: 1200,
+            justifyContent: "flex-end",
+            mb: 2,
+          }}
+        >
+          <Button variant="contained" onClick={handleExportSummary}>
+            Export Order Summary
+          </Button>
         </Box>
 
         {/* Data Table Section */}

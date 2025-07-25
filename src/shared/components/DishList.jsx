@@ -36,9 +36,9 @@ const DishList = ({
         {fixedTabs && (
           <Box
             sx={{
-              position: "fixed",
-              top: "159px", // adjust as needed
-              zIndex: 999,
+              position: "sticky",
+              top: "0", // adjust as needed
+              zIndex: 2,
               width: "100%",
               backgroundColor: "white",
               display: "flex",

@@ -38,6 +38,7 @@ const CartDrawer = ({ onClose, setShowToast }) => {
     const orderItems = cartItems.map((item) => ({
       dishName: item.dishName,
       quantity: item.quantity,
+      price: item.price,
     }));
 
     const newOrder = {
@@ -45,6 +46,7 @@ const CartDrawer = ({ onClose, setShowToast }) => {
       customerName,
       items: orderItems,
       createdAt: new Date().toISOString(),
+      paymentStatus: "unpaid",
     };
 
     // Save to localStorage

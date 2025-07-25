@@ -79,7 +79,12 @@ const OrderingPage = ({ openDrawer, setOpenDrawer }) => {
             },
           }}
         >
-          <DishList dishes={dishes} mode="customer" onAddToCart={addToCart} />
+          <DishList
+            dishes={dishes}
+            mode="customer"
+            fixedTabs={true}
+            onAddToCart={addToCart}
+          />
         </Box>
       </Box>
 
