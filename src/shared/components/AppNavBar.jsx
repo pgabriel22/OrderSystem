@@ -27,7 +27,7 @@ const AppNavBar = ({ setOpenDrawer }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState(null); // "admin" or "customer"
-  const [role, setRole] = useState("admin"); // selected in login
+  const [authMode, setAuthMode] = useState("login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -135,7 +135,7 @@ const AppNavBar = ({ setOpenDrawer }) => {
             }}
           >
             <Typography variant="h6" textAlign="center">
-              Login
+              {authMode === "login" ? "Login" : "Sign Up"}
             </Typography>
 
             <TextField
@@ -151,18 +151,10 @@ const AppNavBar = ({ setOpenDrawer }) => {
               onChange={(e) => setPassword(e.target.value)}
               fullWidth
             />
-            <FormControl fullWidth>
-              <InputLabel id="role-select-label">Role</InputLabel>
-              <Select
-                labelId="role-select-label"
-                value={role}
-                label="Role"
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="customer">Customer</MenuItem>
-              </Select>
-            </FormControl>
+
+            {authMode === "signup" && (
+              <TextField label="Confirm Password" type="password" />
+            )}
 
             <Box
               sx={{
