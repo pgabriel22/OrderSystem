@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Box, useMediaQuery, Snackbar, Alert, Drawer } from "@mui/material";
+import {
+  Box,
+  useMediaQuery,
+  Snackbar,
+  Alert,
+  Drawer,
+  Fab,
+  Badge,
+} from "@mui/material";
 import Footer from "../../shared/components/Footer";
 import DishList from "../../shared/components/DishList";
 import Waiter from "../../assets/taking-order.gif";
 import { useLocalCart } from "../../shared/hooks/useLocalCart";
 import CartDrawer from "./components/CartDrawer";
+import { useCart } from "../../shared/context/CartContext";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const OrderingPage = ({ openDrawer, setOpenDrawer }) => {
+  const { getCartCount } = useCart();
   const isMobile = useMediaQuery("(max-width: 900px)");
   const [dishes, setDishes] = useState([]);
   const { addToCart } = useLocalCart();
@@ -86,6 +97,26 @@ const OrderingPage = ({ openDrawer, setOpenDrawer }) => {
           />
         </Box>
       </Box>
+
+      {!openDrawer && (
+        <Fab
+          color="primary"
+          aria-label="cart"
+          onClick={() => setOpenDrawer(true)}
+          sx={{
+            position: "fixed",
+            bottom: 50,
+            right: 16,
+            zIndex: 1300,
+            backgroundColor: "#ff5722",
+            "&:hover": { backgroundColor: "#e64a19" },
+          }}
+        >
+          <Badge badgeContent={getCartCount()} color="error">
+            <ShoppingCartIcon />
+          </Badge>
+        </Fab>
+      )}
 
       {/*Cart Drawer*/}
       <Drawer

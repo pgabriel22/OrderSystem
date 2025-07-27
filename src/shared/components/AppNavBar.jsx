@@ -14,8 +14,6 @@ import {
   Alert,
 } from "@mui/material";
 import OrderLogo from "../../assets/okb-logo.png";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useCart } from "../context/CartContext";
 
 const AppNavBar = ({
   setOpenDrawer,
@@ -29,7 +27,6 @@ const AppNavBar = ({
   const navigate = useNavigate();
   const location = useLocation();
   const isOrderingPage = location.pathname === "/order-create";
-  const { getCartCount } = useCart();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -231,7 +228,7 @@ const AppNavBar = ({
         )}
 
         {/*Cart Button */}
-        {isOrderingPage && (
+        {/* {isOrderingPage && (
           <IconButton
             color="inherit"
             aria-label="cart"
@@ -242,7 +239,7 @@ const AppNavBar = ({
               <ShoppingCartIcon style={{ color: "white" }} />
             </Badge>
           </IconButton>
-        )}
+        )} */}
 
         {/* Login Modal */}
         <Modal open={isModalOpen} onClose={handleCloseModal}>
