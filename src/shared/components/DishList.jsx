@@ -20,7 +20,7 @@ const DishList = ({
     setSelectedTab(newValue);
   };
 
-  const dishTypes = ["mainDish", "secondDish", "addons"];
+  const dishTypes = [0, 1, 2];
   const tabLabels = ["Main Dish", "Second Dish", "Add-ons"];
 
   const filteredDishes = dishes.filter(

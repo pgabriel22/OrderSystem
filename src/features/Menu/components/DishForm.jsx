@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { DISH_TYPE_OPTIONS } from "../../constants/dishConstants.js";
-import { saveDish } from "../../lib/supabaseDishService.js";
+import { DISH_TYPE_OPTIONS } from "../../../constants/dishConstants.js";
+import { saveDish } from "../../../lib/supabaseDishService.js";
 import {
   TextField,
   Button,
@@ -14,7 +14,7 @@ import {
   Checkbox,
 } from "@mui/material";
 
-const DishForm = ({ setDish, initialData }) => {
+const DishForm = ({ setDish, initialData, showSuccessToast }) => {
   const [formData, setFormData] = useState({
     id: "",
     dishName: "",
@@ -68,9 +68,9 @@ const DishForm = ({ setDish, initialData }) => {
       dishName: formData.dishName ? "" : "Dish Name is required.",
       price: formData.price ? "" : "Price is required.",
       dishType:
-      formData.dishType !== undefined && formData.dishType !== null
-        ? ""
-        : "Dish Type is required.",
+        formData.dishType !== undefined && formData.dishType !== null
+          ? ""
+          : "Dish Type is required.",
     };
     setErrors(newErrors);
 
@@ -84,8 +84,13 @@ const DishForm = ({ setDish, initialData }) => {
     try {
       const saved = await saveDish(formData, !!initialData);
       setDish(saved); // Pass it back to parent
+      showSuccessToast(
+        initialData
+          ? "Dish updated successfully!"
+          : "Dish created successfully!"
+      );
     } catch (err) {
-      console.error("❌ Save failed:", err.message);
+      console.error("Save failed:", err.message);
     }
   };
 

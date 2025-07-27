@@ -15,6 +15,7 @@ import { useLocalCart } from "../../shared/hooks/useLocalCart";
 import CartDrawer from "./components/CartDrawer";
 import { useCart } from "../../shared/context/CartContext";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { fetchDishes, deleteDish } from "../../lib/supabaseDishService";
 
 const OrderingPage = ({ openDrawer, setOpenDrawer }) => {
   const { getCartCount } = useCart();
@@ -23,9 +24,20 @@ const OrderingPage = ({ openDrawer, setOpenDrawer }) => {
   const { addToCart } = useLocalCart();
   const [showToast, setShowToast] = useState(false);
 
+  // useEffect(() => {
+  //   const savedDishes = JSON.parse(localStorage.getItem("dishes")) || [];
+  //   setDishes(Array.isArray(savedDishes) ? savedDishes : []);
+  // }, []);
   useEffect(() => {
-    const savedDishes = JSON.parse(localStorage.getItem("dishes")) || [];
-    setDishes(Array.isArray(savedDishes) ? savedDishes : []);
+    const loadDishes = async () => {
+      try {
+        const dishes = await fetchDishes();
+        setDishes(dishes);
+      } catch (err) {
+        console.error("Failed to load dishes", err.message);
+      }
+    };
+    loadDishes();
   }, []);
 
   return (

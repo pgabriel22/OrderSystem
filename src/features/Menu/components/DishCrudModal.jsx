@@ -2,7 +2,14 @@ import React from "react";
 import { Modal, Box, Typography, Button } from "@mui/material";
 import DishForm from "./DishForm";
 
-const DishCrudModal = ({ open, onClose, mode, initialData, onSubmit }) => {
+const DishCrudModal = ({
+  open,
+  onClose,
+  mode,
+  initialData,
+  onSubmit,
+  showSuccessToast,
+}) => {
   const isEditMode = mode === "edit";
 
   const handleSubmit = (dishData) => {
@@ -31,7 +38,11 @@ const DishCrudModal = ({ open, onClose, mode, initialData, onSubmit }) => {
           {isEditMode ? "Edit Dish" : "Create New Dish"}
         </Typography>
 
-        <DishForm setDish={handleSubmit} initialData={initialData} />
+        <DishForm
+          setDish={handleSubmit}
+          initialData={initialData}
+          showSuccessToast={showSuccessToast}
+        />
 
         <Button onClick={onClose} sx={{ mt: 2 }}>
           Close
