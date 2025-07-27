@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery, useTheme } from "@mui/material";
 import Footer from "../../shared/components/Footer";
-import AppBar from "../../shared/components/AppNavBar";
 import {
   Box,
   Typography,
@@ -14,7 +13,7 @@ import {
 import MenuListIcon from "../../assets/menu-list.jpg";
 import OrderListIcon from "../../assets/order-checkout.gif";
 
-const AdminHomePage = () => {
+const AdminHomePage = ({ mode, setMode }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -27,7 +26,6 @@ const AdminHomePage = () => {
         minHeight: "100vh",
       }}
     >
-      <AppBar />
       <Box
         sx={{
           flexGrow: 1,

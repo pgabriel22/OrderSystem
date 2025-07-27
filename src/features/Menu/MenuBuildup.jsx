@@ -7,11 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 import Footer from "../../shared/components/Footer";
-import AppBar from "../../shared/components/AppNavBar";
 import DishCrudModal from "../../shared/components/DishCrudModal";
 import DishList from "../../shared/components/DishList";
 
-const MenuBuildup = () => {
+const MenuBuildup = ({ mode, setMode }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -52,11 +51,6 @@ const MenuBuildup = () => {
 
   return (
     <Box sx={{ height: "100vh", overflow: "hidden" }}>
-      {/* Fixed AppBar */}
-      <Box sx={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000 }}>
-        <AppBar />
-      </Box>
-
       {/* Header Controls */}
       <Box
         sx={{

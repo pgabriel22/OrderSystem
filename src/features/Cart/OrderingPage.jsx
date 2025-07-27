@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Box, useMediaQuery, Snackbar, Alert, Drawer } from "@mui/material";
-import AppNavBar from "../../shared/components/AppNavBar";
 import Footer from "../../shared/components/Footer";
 import DishList from "../../shared/components/DishList";
 import Waiter from "../../assets/taking-order.gif";

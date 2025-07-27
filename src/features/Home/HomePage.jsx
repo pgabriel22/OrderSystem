@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../shared/components/Footer";
-import AppBar from "../../shared/components/AppNavBar";
 import { Box, Typography, Button, useMediaQuery } from "@mui/material";
-import { AddCard } from "@mui/icons-material";
 import OnlineOrder from "../../assets/online-ordering.gif";
 
-const HomePage = () => {
+const HomePage = ({setAuthMode, setIsModalOpen}) => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 900px)"); // Adjust layout based on screen width
 
@@ -18,7 +16,6 @@ const HomePage = () => {
         minHeight: "100vh",
       }}
     >
-      <AppBar />
       <Box
         sx={{
           flexGrow: 1,
@@ -79,8 +76,14 @@ const HomePage = () => {
             and we'll consolidate all orders for convenient delivery, saving you
             time and making lunch breaks more enjoyable.
           </Typography>
-          <Button onClick={() => navigate("/order-create")}>
-            Click here to create your order
+          <Button
+            type="text"
+            onClick={() => {
+              setAuthMode("signup");
+              setIsModalOpen(true);
+            }}
+          >
+            Click here to create your account and start ordering
           </Button>
         </Box>
       </Box>

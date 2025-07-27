@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Footer from "../../shared/components/Footer";
-import AppNavBar from "../../shared/components/AppNavBar";
 
 const getStoredOrders = () => {
   try {
@@ -32,7 +31,7 @@ const getStoredOrders = () => {
   }
 };
 
-const OrdersV2 = () => {
+const OrdersV2 = ({ mode, setMode }) => {
   const isMobile = useMediaQuery("(max-width: 900px)");
   const [order, setOrders] = useState(getStoredOrders);
   const [searchOrder, setSearchOrder] = useState("");
@@ -151,8 +150,6 @@ const OrdersV2 = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <AppNavBar />
-
       <Box
         sx={{
           flexGrow: 1,

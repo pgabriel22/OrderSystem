@@ -16,7 +16,7 @@ const getStoredOrders = () => {
   }
 };
 
-const Orders = () => {
+const Orders = ({ mode, setMode }) => {
   const isMobile = useMediaQuery("(max-width: 900px)");
   const [order, setOrders] = useState(getStoredOrders);
   const [isEditing, setIsEditing] = useState(null);
