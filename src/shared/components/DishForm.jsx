@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { DISH_TYPE_OPTIONS } from "../../constants/dishConstants.js";
+import { saveDish } from "../../lib/supabaseDishService.js";
 import {
   TextField,
   Button,
@@ -52,7 +54,12 @@ const DishForm = ({ setDish, initialData }) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]:
+        name === "dishType"
+          ? parseInt(value)
+          : type === "checkbox"
+          ? checked
+          : value,
     });
   };
 
@@ -60,7 +67,10 @@ const DishForm = ({ setDish, initialData }) => {
     const newErrors = {
       dishName: formData.dishName ? "" : "Dish Name is required.",
       price: formData.price ? "" : "Price is required.",
-      dishType: formData.dishType ? "" : "Dish Type is required.",
+      dishType:
+      formData.dishType !== undefined && formData.dishType !== null
+        ? ""
+        : "Dish Type is required.",
     };
     setErrors(newErrors);
 
@@ -68,9 +78,14 @@ const DishForm = ({ setDish, initialData }) => {
     return !newErrors.dishName && !newErrors.price && !newErrors.dishType;
   };
 
-  const handleSubmit = () => {
-    if (validate()) {
-      setDish(formData); // Pass formData to the parent to create/update the dish
+  const handleSubmit = async () => {
+    if (!validate()) return;
+
+    try {
+      const saved = await saveDish(formData, !!initialData);
+      setDish(saved); // Pass it back to parent
+    } catch (err) {
+      console.error("❌ Save failed:", err.message);
     }
   };
 
@@ -106,9 +121,11 @@ const DishForm = ({ setDish, initialData }) => {
           value={formData.dishType}
           onChange={handleChange}
         >
-          <MenuItem value="mainDish">Main Dish</MenuItem>
-          <MenuItem value="secondDish">Second Dish</MenuItem>
-          <MenuItem value="addons">Add-ons</MenuItem>
+          {DISH_TYPE_OPTIONS.map(({ value, label }) => (
+            <MenuItem key={value} value={value}>
+              {label}
+            </MenuItem>
+          ))}
         </Select>
         <FormHelperText>{errors.dishType}</FormHelperText>
       </FormControl>

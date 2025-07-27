@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { fetchDishes, deleteDish } from "../../lib/supabaseDishService";
 import {
   Box,
   Button,
@@ -18,36 +19,68 @@ const MenuBuildup = ({ mode, setMode }) => {
   const [dishes, setDishes] = useState([]);
   const [editingDish, setEditingDish] = useState(null);
 
+  // useEffect(() => {
+  //   const savedDishes = JSON.parse(localStorage.getItem("dishes")) || [];
+  //   setDishes(Array.isArray(savedDishes) ? savedDishes : []);
+  // }, []);
+
   useEffect(() => {
-    const savedDishes = JSON.parse(localStorage.getItem("dishes")) || [];
-    setDishes(Array.isArray(savedDishes) ? savedDishes : []);
+    const loadDishes = async () => {
+      try {
+        const dishes = await fetchDishes();
+        setDishes(dishes);
+      } catch (err) {
+        console.error("Failed to load dishes", err.message);
+      }
+    };
+    loadDishes();
   }, []);
+
+  const handleSubmitDish = (dishData) => {
+  // dishData already saved in Supabase, just update local state
+  const updatedDishes = editingDish
+    ? dishes.map((dish) => (dish.id === dishData.id ? dishData : dish))
+    : [...dishes, dishData];
+
+  setDishes(updatedDishes);
+  handleCloseModal();
+};
+
+  const handleDeleteDish = async (id) => {
+    try {
+      await deleteDish(id);
+      const updated = await fetchDishes();
+      setDishes(updated);
+    } catch (err) {
+      console.error("Delete error:", err.message);
+    }
+  };
 
   const handleCloseModal = () => {
     setOpenModal(false);
     setEditingDish(null);
   };
 
-  const handleSubmitDish = (dishData) => {
-    const updatedDishes = editingDish
-      ? dishes.map((dish) => (dish.id === dishData.id ? dishData : dish))
-      : [...dishes, dishData];
+  // const handleSubmitDish = (dishData) => {
+  //   const updatedDishes = editingDish
+  //     ? dishes.map((dish) => (dish.id === dishData.id ? dishData : dish))
+  //     : [...dishes, dishData];
 
-    setDishes(updatedDishes);
-    localStorage.setItem("dishes", JSON.stringify(updatedDishes));
-    handleCloseModal();
-  };
+  //   setDishes(updatedDishes);
+  //   localStorage.setItem("dishes", JSON.stringify(updatedDishes));
+  //   handleCloseModal();
+  // };
 
   const handleEditDish = (dish) => {
     setEditingDish(dish);
     setOpenModal(true);
   };
 
-  const handleDeleteDish = (id) => {
-    const updatedDishes = dishes.filter((d) => d.id !== id);
-    setDishes(updatedDishes);
-    localStorage.setItem("dishes", JSON.stringify(updatedDishes));
-  };
+  // const handleDeleteDish = (id) => {
+  //   const updatedDishes = dishes.filter((d) => d.id !== id);
+  //   setDishes(updatedDishes);
+  //   localStorage.setItem("dishes", JSON.stringify(updatedDishes));
+  // };
 
   return (
     <Box sx={{ height: "100vh", overflow: "hidden" }}>

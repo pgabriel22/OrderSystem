@@ -1,4 +1,5 @@
 import React from "react";
+import { DISH_TYPES } from "../../constants/dishConstants";
 import {
   IconButton,
   Tooltip,
@@ -81,7 +82,7 @@ const DishCard = ({
           </Typography>
         </Box>
         <Typography variant="body2" sx={{ mb: 1 }}>
-          {dishType}
+          {DISH_TYPES[dishType]}
         </Typography>
         <Box>
           {isAvailable ? (
