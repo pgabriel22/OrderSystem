@@ -128,7 +128,7 @@ const AppNavBar = ({
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      console.log("Login button clicked");
+      // console.log("Login button clicked");
 
       const { data: authData, error: loginError } =
         await supabase.auth.signInWithPassword({
@@ -137,13 +137,13 @@ const AppNavBar = ({
         });
 
       if (loginError) {
-        console.error("❌ Login failed:", loginError.message);
+        // console.error("❌ Login failed:", loginError.message);
         setError("Login failed: " + loginError.message);
         return;
       }
 
       const userId = authData.user?.id;
-      console.log("✅ Auth user ID:", userId);
+      // console.log("✅ Auth user ID:", userId);
 
       const { data: userData, error: profileError } = await supabase
         .from("users")
@@ -152,13 +152,13 @@ const AppNavBar = ({
         .single();
 
       if (profileError) {
-        console.error("❌ Failed to load user profile:", profileError.message);
+        // console.error("❌ Failed to load user profile:", profileError.message);
         setError("Failed to load profile: " + profileError.message);
         return;
       }
 
       const role = userData.role?.toLowerCase();
-      console.log("✅ Logged-in user role:", role);
+      // console.log("✅ Logged-in user role:", role);
 
       setMode(role);
       localStorage.setItem("mode", role);
@@ -166,10 +166,10 @@ const AppNavBar = ({
 
       handleCloseModal();
 
-      console.log(
-        "✅ Will navigate to:",
-        role === "admin" ? "/admin-home" : "/order-create"
-      );
+      // console.log(
+      //   "✅ Will navigate to:",
+      //   role === "admin" ? "/admin-home" : "/order-create"
+      // );
 
       if (role === "admin") {
         navigate("/admin-home");
@@ -177,7 +177,7 @@ const AppNavBar = ({
         navigate("/order-create");
       }
     } catch (err) {
-      console.error("🚨 Unexpected error during login:", err);
+      // console.error("🚨 Unexpected error during login:", err);
       setError("Unexpected error: " + err.message);
     }
   };
