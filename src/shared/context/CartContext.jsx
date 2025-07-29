@@ -1,65 +1,88 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cart, setCart] = useState([]);
 
+  // Load cart from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem("cart");
     if (stored) {
-      setCartItems(JSON.parse(stored));
+      setCart(JSON.parse(stored));
     }
   }, []);
 
-  const addToCart = (item) => {
-    const exists = cartItems.find((cartItems) => cartItems.id === item.id);
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
-    let updated;
-    if (exists) {
-      updated = cartItems.map((cartItems) =>
-        cartItems.id === item.id
-          ? { ...cartItems, quantity: cartItems.quantity + 1 }
-          : cartItems
-      );
-    } else {
-      updated = [...cartItems, { ...item, quantity: 1 }];
-    }
+  // Add item to cart or update quantity if exists
+  const addToCart = (dish) => {
+    console.log("Adding to cart:", dish);
+    const exists = cart.find((item) => item.dish_id === dish.id);
 
-    setCartItems(updated);
-    localStorage.setItem("cart", JSON.stringify(updated));
+    const updated = exists
+      ? cart.map((item) =>
+          item.dish_id === dish.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      : [
+          ...cart,
+          {
+            dish_id: dish.id,
+            dishName: dish.dishName || dish.name || "Unamed Dish",
+            unit_price: dish.price,
+            quantity: 1,
+          },
+        ];
+
+    setCart(updated);
   };
 
-  const getCartCount = () => cartItems.length;
-
-  const updateQuantity = (id, qty) => {
-    const updated = cartItems.map((item) =>
-      item.id === id ? { ...item, quantity: Math.max(1, qty) } : item
+  // Update quantity of a dish
+  const updateQuantity = (dish_id, quantity) => {
+    const updated = cart.map((item) =>
+      item.dish_id === dish_id
+        ? { ...item, quantity: Math.max(1, quantity) }
+        : item
     );
-    setCartItems(updated);
-    localStorage.setItem("cart", JSON.stringify(updated));
+    setCart(updated);
   };
 
-  const removeFromCart = (id) => {
-    const updated = cartItems.filter((item) => item.id !== id);
-    setCartItems(updated);
-    localStorage.setItem("cart", JSON.stringify(updated));
+  // Remove an item from cart
+  const removeFromCart = (dish_id) => {
+    const updated = cart.filter((item) => item.dish_id !== dish_id);
+    setCart(updated);
   };
 
+  // Clear entire cart
   const clearCart = () => {
-    localStorage.setItem("cart", JSON.stringify([]));
-    setCartItems([]);
+    setCart([]);
+    localStorage.removeItem("cart");
   };
+
+  // Get total number of items (sum of quantities)
+  const getCartCount = () =>
+    cart.reduce((total, item) => total + item.quantity, 0);
+
+  // Get total price
+  const getTotalPrice = () =>
+    cart.reduce((total, item) => total + item.unit_price * item.quantity, 0);
 
   return (
     <CartContext.Provider
       value={{
-        cartItems,
+        cart,
         addToCart,
-        getCartCount,
         updateQuantity,
         removeFromCart,
         clearCart,
+        getCartCount,
+        getTotalPrice,
       }}
     >
       {children}

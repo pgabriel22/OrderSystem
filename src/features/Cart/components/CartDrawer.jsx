@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useSession, useUser } from "@supabase/auth-helpers-react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../../lib/supabaseClient";
 import { useCart } from "../../../shared/context/CartContext";
 import {
   Box,
@@ -7,58 +10,77 @@ import {
   Button,
   TextField,
   Divider,
-  Snackbar,
-  Alert,
 } from "@mui/material";
-import { Add, Remove, Delete } from "@mui/icons-material";
+import { Add, Remove, Delete, ShoppingCart } from "@mui/icons-material";
 
 const CartDrawer = ({ onClose, setShowToast }) => {
-  const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
-  const [customerName, setCustomerName] = useState("");
-  const [errors, setErrors] = useState({
-    customerName: "",
-  });
+  const { cart, getTotalPrice, clearCart, updateQuantity, removeFromCart } =
+    useCart();
 
-  // Validation for Customer Name
-  const validateCustomerName = () => {
-    const newErrors = {
-      customerName: customerName.trim() ? "" : "Customer Name is required.",
-    };
+  const session = useSession();
+  const navigate = useNavigate();
+  const user = useUser();
 
-    setErrors(newErrors);
-
-    return !newErrors.customerName;
-  };
-
-  const handleCheckout = () => {
-    if (!validateCustomerName()) {
-      return;
+  useEffect(() => {
+    if (session && !user) {
+      navigate("/");
     }
+  }, [session, user, navigate]);
 
-    const orderItems = cartItems.map((item) => ({
-      dishName: item.dishName,
-      quantity: item.quantity,
-      price: item.price,
-    }));
+  const handleCheckout = async () => {
+    if (!user) return alert("You must be logged in to place an order.");
+    if (cart.length === 0) return alert("Cart is empty.");
 
-    const newOrder = {
-      id: Date.now(), // simple unique ID
-      customerName,
-      items: orderItems,
-      createdAt: new Date().toISOString(),
-      paymentStatus: "unpaid",
-    };
+    try {
+      // Step 1: Fetch the user's full_name from the users table
+      const { data: userProfile, error: userError } = await supabase
+        .from("users")
+        .select("full_name")
+        .eq("id", user.id)
+        .maybeSingle();
 
-    // Save to localStorage
-    const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
-    existingOrders.push(newOrder);
-    localStorage.setItem("orders", JSON.stringify(existingOrders));
+      if (userError || !userProfile) {
+        throw new Error("Unable to retrieve user profile.");
+      }
 
-    // Optional: Clear cart and close drawer
-    clearCart();
-    setCustomerName("");
-    setShowToast(true);
-    onClose();
+      const fullName = userProfile.full_name;
+
+      // Step 2: Insert order including customer_name
+      const { data: order, error: orderError } = await supabase
+        .from("orders")
+        .insert({
+          user_id: user.id,
+          customer_name: fullName, // store it here
+          total_price: getTotalPrice(),
+          payment_status: false,
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      // Step 3: Insert order items
+      const itemsPayload = cart.map((item) => ({
+        order_id: order.id,
+        dish_id: item.dish_id,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+      }));
+
+      const { error: itemError } = await supabase
+        .from("order_items")
+        .insert(itemsPayload);
+
+      if (itemError) throw itemError;
+
+      // Step 4: Success actions
+      clearCart();
+      setShowToast(true);
+      onClose();
+    } catch (err) {
+      console.error("Order submission failed:", err.message);
+      alert("Failed to submit order. Please try again.");
+    }
   };
 
   return (
@@ -73,28 +95,16 @@ const CartDrawer = ({ onClose, setShowToast }) => {
         }}
       >
         <Typography variant="h6" gutterBottom>
-          Your Cart
+          Your Cart <ShoppingCart />
         </Typography>
-
-        {cartItems.length > 0 && (
-          <TextField
-            fullWidth
-            label="Customer Name"
-            value={customerName}
-            onChange={(e) => setCustomerName(e.target.value)}
-            sx={{ mt: 2, mb: 3 }}
-            error={!!errors.customerName}
-            helperText={errors.customerName}
-          />
-        )}
 
         {/* Cart Items scrollable section */}
         <Box sx={{ flexGrow: 1, overflowY: "auto", pr: 1 }}>
-          {cartItems.length === 0 ? (
+          {cart.length === 0 ? (
             <Typography>No items in your cart.</Typography>
           ) : (
-            cartItems.map((item) => (
-              <Box key={item.id} sx={{ mb: 2 }}>
+            cart.map((item) => (
+              <Box key={item.dish_id} sx={{ mb: 2 }}>
                 <Box
                   sx={{
                     display: "flex",
@@ -104,25 +114,29 @@ const CartDrawer = ({ onClose, setShowToast }) => {
                 >
                   {/* Dish Name and Price */}
                   <Box>
-                    <Typography>{item.dishName}</Typography>
+                    <Typography>{item.dishName || "Unamed Dish"}</Typography>
                     <Typography variant="body2">
-                      ₱{item.price} × {item.quantity}
+                      ₱{item.unit_price} × {item.quantity}
                     </Typography>
                   </Box>
 
                   {/* Controls */}
                   <Box>
                     <IconButton
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      onClick={() =>
+                        updateQuantity(item.dish_id, item.quantity - 1)
+                      }
                     >
                       <Remove />
                     </IconButton>
                     <IconButton
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      onClick={() =>
+                        updateQuantity(item.dish_id, item.quantity + 1)
+                      }
                     >
                       <Add />
                     </IconButton>
-                    <IconButton onClick={() => removeFromCart(item.id)}>
+                    <IconButton onClick={() => removeFromCart(item.dish_id)}>
                       <Delete />
                     </IconButton>
                   </Box>
@@ -138,7 +152,7 @@ const CartDrawer = ({ onClose, setShowToast }) => {
         <Button
           fullWidth
           variant="contained"
-          disabled={cartItems.length === 0}
+          disabled={cart.length === 0}
           onClick={handleCheckout}
           sx={{ mt: 2 }}
         >

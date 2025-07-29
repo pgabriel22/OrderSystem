@@ -137,28 +137,30 @@ const AppNavBar = ({
         });
 
       if (loginError) {
-        // console.error("❌ Login failed:", loginError.message);
+        // console.error("Login failed:", loginError.message);
         setError("Login failed: " + loginError.message);
         return;
       }
 
       const userId = authData.user?.id;
-      // console.log("✅ Auth user ID:", userId);
+      // console.log("Auth user ID:", userId);
 
       const { data: userData, error: profileError } = await supabase
         .from("users")
         .select("role")
         .eq("id", userId)
-        .single();
+        .maybeSingle();
 
-      if (profileError) {
-        // console.error("❌ Failed to load user profile:", profileError.message);
-        setError("Failed to load profile: " + profileError.message);
+      if (!userData || profileError) {
+        // console.error("Failed to load user profile:", profileError.message);
+        setError(
+          "Failed to load profile: " +
+            (profileError?.message || "User not found")
+        );
         return;
       }
-
       const role = userData.role?.toLowerCase();
-      // console.log("✅ Logged-in user role:", role);
+      // console.log("Logged-in user role:", role);
 
       setMode(role);
       localStorage.setItem("mode", role);
@@ -167,7 +169,7 @@ const AppNavBar = ({
       handleCloseModal();
 
       // console.log(
-      //   "✅ Will navigate to:",
+      //   "Will navigate to:",
       //   role === "admin" ? "/admin-home" : "/order-create"
       // );
 
@@ -177,7 +179,7 @@ const AppNavBar = ({
         navigate("/order-create");
       }
     } catch (err) {
-      // console.error("🚨 Unexpected error during login:", err);
+      // console.error("Unexpected error during login:", err);
       setError("Unexpected error: " + err.message);
     }
   };
@@ -226,20 +228,6 @@ const AppNavBar = ({
             Logout
           </Button>
         )}
-
-        {/*Cart Button */}
-        {/* {isOrderingPage && (
-          <IconButton
-            color="inherit"
-            aria-label="cart"
-            sx={{ position: "absolute", top: 25, right: 16 }}
-            onClick={() => setOpenDrawer(true)}
-          >
-            <Badge badgeContent={getCartCount()} color="error">
-              <ShoppingCartIcon style={{ color: "white" }} />
-            </Badge>
-          </IconButton>
-        )} */}
 
         {/* Login Modal */}
         <Modal open={isModalOpen} onClose={handleCloseModal}>

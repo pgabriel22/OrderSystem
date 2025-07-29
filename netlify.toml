@@ -26,3 +26,8 @@
   for = "/*.json"
     [headers.values]
     Content-Type = "application/json"
+
+[[scheduled.functions]]
+function = "tagUnavailable"
+cron = "0 17 * * *" # Runs every day at 17:00 (5 PM)
+

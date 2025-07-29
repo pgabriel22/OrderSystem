@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useSession, useUser } from "@supabase/auth-helpers-react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   useMediaQuery,
@@ -15,7 +17,7 @@ import { useLocalCart } from "../../shared/hooks/useLocalCart";
 import CartDrawer from "./components/CartDrawer";
 import { useCart } from "../../shared/context/CartContext";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { fetchDishes, deleteDish } from "../../lib/supabaseDishService";
+import { fetchDishes } from "../../lib/supabaseDishService";
 
 const OrderingPage = ({ openDrawer, setOpenDrawer }) => {
   const { getCartCount } = useCart();
@@ -24,10 +26,6 @@ const OrderingPage = ({ openDrawer, setOpenDrawer }) => {
   const { addToCart } = useLocalCart();
   const [showToast, setShowToast] = useState(false);
 
-  // useEffect(() => {
-  //   const savedDishes = JSON.parse(localStorage.getItem("dishes")) || [];
-  //   setDishes(Array.isArray(savedDishes) ? savedDishes : []);
-  // }, []);
   useEffect(() => {
     const loadDishes = async () => {
       try {
