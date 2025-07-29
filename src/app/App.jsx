@@ -6,6 +6,7 @@ import MenuBuildup from "../features/Menu/MenuBuildup.jsx";
 import Orders from "../features/Orders/Orders.jsx";
 import AdminHomePage from "../features/Home/AdminHomePage.jsx";
 import HomePage from "../features/Home/HomePage.jsx";
+import CustomerHomePage from "../features/Home/CustomerHomePage.jsx";
 import OrderingPage from "../features/Cart/OrderingPage.jsx";
 import OrdersV2 from "../features/Orders/OrdersV2.jsx";
 import AppNavBar from "../shared/components/AppNavBar.jsx";
@@ -49,6 +50,17 @@ const App = () => {
           path="/admin-home"
           element={
             <AdminHomePage
+              mode={mode}
+              setMode={setMode}
+              setAuthMode={setAuthMode}
+              setIsModalOpen={setIsModalOpen}
+            />
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <CustomerHomePage
               mode={mode}
               setMode={setMode}
               setAuthMode={setAuthMode}

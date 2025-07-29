@@ -176,7 +176,7 @@ const AppNavBar = ({
       if (role === "admin") {
         navigate("/admin-home");
       } else {
-        navigate("/order-create");
+        navigate("/dashboard");
       }
     } catch (err) {
       // console.error("Unexpected error during login:", err);
