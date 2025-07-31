@@ -206,7 +206,7 @@ const AppNavBar = ({
             if (mode === "admin") {
               navigate("/admin-home");
             } else {
-              navigate("/");
+              navigate("/dashboard");
             }
           }}
         />
