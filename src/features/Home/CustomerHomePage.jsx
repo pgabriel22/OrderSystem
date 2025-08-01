@@ -1,6 +1,6 @@
 import React, { act, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useMediaQuery, useTheme } from "@mui/material";
+import { Grid2, useMediaQuery, useTheme } from "@mui/material";
 import { supabase } from "../../lib/supabaseClient";
 import { useUser } from "@supabase/auth-helpers-react";
 import {
@@ -13,6 +13,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Grid,
 } from "@mui/material";
 import {
   Menu,
@@ -21,13 +22,16 @@ import {
   RestaurantMenu,
 } from "@mui/icons-material";
 import Footer from "../../shared/components/Footer";
-import OrderStatusGif from "../../shared/components/OrderStatusGif";
+import MyOrders from "./components/MyOrders";
+import MyProfile from "./components/MyProfile";
+import OrderHistory from "./components/OrderHistory";
 
 const CustomerHomePage = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 900px)");
   const user = useUser();
   const [fullName, setFullName] = useState();
+  const [activeView, setActiveView] = useState("myProfile");
   const [activeOrders, setActiveOrders] = useState([]);
   const isSameLocalDay = (date1, date2) =>
     new Date(date1).toLocaleDateString() ===
@@ -83,260 +87,147 @@ const CustomerHomePage = () => {
   );
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          maxWidth: "50%",
-          flexDirection: "column",
-          p: 2,
-          mt: 13,
-          ml: 70,
-        }}
-      >
-        <Typography variant="h3">
-          Welcome back{fullName ? `, ${fullName}` : ""}!
-        </Typography>
-        <Typography variant="h6" fontWeight="bold" mb={2}>
-          Your Account
-        </Typography>
-
-        {/* Profile */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mb: 2,
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Avatar
-              alt="Profile"
-              src="/avatar.png" // optional
-              sx={{ bgcolor: "#fce4ec" }}
-            />
-            <Box>
-              <Typography variant="body1">Profile</Typography>
-              <Typography variant="body2" color="text.secondary">
-                View and edit your profile
-              </Typography>
-            </Box>
-          </Box>
-          <IconButton
+      <Grid container spacing={2}>
+        <Grid item md={6} xs={12}>
+          {/* User Navigation Actions */}
+          <Box
             sx={{
-              color: "#ff5722",
-              "&:hover": {
-                color: "white",
-                backgroundColor: "#ff5722",
-              },
+              display: "flex",
+              flexDirection: "column",
+              p: 2,
+              mt: 13,
+              justifyContent: "center",
             }}
           >
-            <ChevronRight />
-          </IconButton>
-        </Box>
+            <Typography
+              variant="h3"
+              sx={{ alignSelf: "center", justifySelf: "center" }}
+            >
+              Welcome back{fullName ? `, ${fullName}` : ""}!
+            </Typography>
+            <Typography variant="h6" fontWeight="bold" mb={2} mt={2}>
+              Your Account
+            </Typography>
 
-        {/* Order History */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mb: 2,
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Avatar sx={{ bgcolor: "#eeeeee" }}>
-              <Restore />
-            </Avatar>
-            <Box>
-              <Typography variant="body1">Order History</Typography>
-              <Typography variant="body2" color="text.secondary">
-                View your past orders
-              </Typography>
+            {/* Profile */}
+            <Box
+              onClick={() => setActiveView("myProfile")}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                cursor: "pointer",
+                mb: 2,
+                ml: 3,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Avatar
+                  alt="Profile"
+                  src="/avatar.png" // optional
+                  sx={{ bgcolor: "#fce4ec" }}
+                />
+                <Box>
+                  <Typography variant="body1">Profile</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    View and edit your profile
+                  </Typography>
+                </Box>
+              </Box>
             </Box>
-          </Box>
-          <IconButton
-            sx={{
-              color: "#ff5722",
-              "&:hover": {
-                color: "white",
-                backgroundColor: "#ff5722",
-              },
-            }}
-          >
-            <ChevronRight />
-          </IconButton>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mb: 2,
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Avatar sx={{ bgcolor: "#eeeeee" }}>
-              <Menu />
-            </Avatar>
-            <Box>
-              <Typography variant="body1">Menu</Typography>
-              <Typography variant="body2" color="text.secondary">
-                Click here to check the available menu for today!
-              </Typography>
-            </Box>
-          </Box>
-          <IconButton
-            onClick={() => navigate("/order-create")}
-            sx={{
-              color: "#ff5722",
-              "&:hover": {
-                color: "white",
-                backgroundColor: "#ff5722",
-              },
-            }}
-          >
-            <ChevronRight />
-          </IconButton>
-        </Box>
-        <Divider />
-      </Box>
 
-      <Box
-        sx={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          justifyContent: "center",
-          alignItems: "center",
-          maxHeight: "50vh",
-          gap: 4,
-          px: 2,
-        }}
-      >
-        {ordersToday.length === 0 ? (
-          <>
-            <OrderStatusGif status="none" isMobile={isMobile} />{" "}
+            {/* Active Orders */}
+            <Box
+              onClick={() => setActiveView("myOrders")}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                cursor: "pointer",
+                mb: 2,
+                ml: 3,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Avatar sx={{ bgcolor: "#eeeeee" }}>
+                  <Restore />
+                </Avatar>
+                <Box>
+                  <Typography variant="body1">My Orders</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Check your active/current orders here
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Order History */}
+            <Box
+              onClick={() => setActiveView("myProfile")}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                cursor: "pointer",
+                mb: 2,
+                ml: 3,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Avatar sx={{ bgcolor: "#eeeeee" }}>
+                  <Restore />
+                </Avatar>
+                <Box>
+                  <Typography variant="body1">Order History</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    View your past orders
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                gap: 3,
-                width: { xs: "90%", sm: 500, md: 800 },
+                alignItems: "center",
+                justifyContent: "space-between",
+                mb: 2,
+                ml: 3,
               }}
             >
-              <Typography
-                variant="h4"
-                sx={{
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
-                }}
-              >
-                Looks like you haven’t ordered yet.
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  textAlign: "center",
-                  fontWeight: "medium",
-                  fontSize: { xs: "0.9rem", sm: "1.1rem", md: "1.3rem" },
-                  maxWidth: "800px",
-                  lineHeight: 1.6,
-                }}
-              >
-                Head over to the menu and grab something tasty!
-              </Typography>
-            </Box>
-          </>
-        ) : (
-          <Box
-            sx={{
-              width: "100%",
-              maxWidth: 1000,
-              px: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 3,
-              overflowY: "auto", // enables scroll if content overflows
-              maxHeight: "50vh",
-              scrollbarWidth: "none", // hide scrollbar in Firefox
-              "&::-webkit-scrollbar": {
-                display: "none", // hide scrollbar in WebKit browsers
-              },
-            }}
-          >
-            {activeOrders.length > 0 && (
-              <Typography
-                ariant="h5"
-                fontWeight="bold"
-                textAlign="center"
-                sx={{
-                  position: "sticky",
-                  top: 0,
-                  zIndex: 1,
-                  backgroundColor: "#fff",
-                  py: 1,
-                }}
-              >
-                Today’s Orders
-              </Typography>
-            )}
-            {ordersToday.map((order, index) => (
-              <>
-                <Box
-                  key={order.id}
-                  sx={{
-                    flexGrow: 1,
-                    display: "flex",
-                    flexDirection: isMobile ? "column" : "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    maxHeight: "50vh",
-                    gap: 4,
-                    px: 2,
-                  }}
-                >
-                  {/* Status-specific GIF */}
-                  <OrderStatusGif
-                    status={order.order_status}
-                    isMobile={isMobile}
-                    variant={index}
-                  />
-                  <Box>
-                    <Typography
-                      fontWeight="bold"
-                      variant="h5"
-                      sx={{ mt: 0, mb: 2 }}
-                    >
-                      Your order is{" "}
-                      {statusLabels[order.order_status] || "Unknown"}
-                    </Typography>
-                    <Typography fontWeight="bold">Order #{order.id}</Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Placed on: {new Date(order.created_at).toLocaleString()}
-                    </Typography>
-                    <List>
-                      {order.order_items?.map((item, idx) => (
-                        <ListItem key={idx}>
-                          <RestaurantMenu sx={{ mr: 1 }} />
-                          <ListItemText
-                            sx={{ paddingBottom: 0 }}
-                            primary={`${item.dishes?.dishName || "Unknown"} x ${
-                              item.quantity
-                            }`}
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Avatar sx={{ bgcolor: "#eeeeee" }}>
+                  <Menu />
+                </Avatar>
+                <Box>
+                  <Typography variant="body1">Menu</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Click here to check the available menu for today!
+                  </Typography>
                 </Box>
-              </>
-            ))}
+              </Box>
+              <IconButton
+                onClick={() => navigate("/order-create")}
+                sx={{
+                  color: "#ff5722",
+                  "&:hover": {
+                    color: "white",
+                    backgroundColor: "#ff5722",
+                  },
+                }}
+              >
+                <ChevronRight />
+              </IconButton>
+            </Box>
+            <Divider />
           </Box>
-        )}
-      </Box>
+        </Grid>
+        <Grid item md={6} xs={12}>
+          {/* Active View Panel */}
+          {activeView === "myProfile" && <MyProfile />}
+          {activeView === "myOrders" && <MyOrders />}
+          {activeView === "orderHistory" && <OrderHistory />}
+        </Grid>
+      </Grid>
 
       <Box
         sx={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 1000 }}

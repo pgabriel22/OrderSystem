@@ -230,7 +230,10 @@ const OrdersV2 = ({ mode, setMode }) => {
     const summaryMap = {};
     let grandTotal = 0;
 
-    orders.forEach((order) => {
+    // Exclude cancelled orders (status 3)
+    const validOrders = orders.filter((order) => order.order_status !== 3);
+
+    validOrders.forEach((order) => {
       (order.items || []).forEach((item) => {
         const name = item.dishName || "Unnamed Dish";
         const qty = parseInt(item.quantity) || 0;
