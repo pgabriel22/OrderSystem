@@ -13,7 +13,7 @@ const MyProfile = () => {
           justifyContent: "center",
           alignItems: "center",
           // maxHeight: "50vh",
-          mt: 13,
+          mt: 18,
           gap: 4,
           px: 2,
         }}

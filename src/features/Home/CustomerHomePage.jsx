@@ -31,7 +31,7 @@ const CustomerHomePage = () => {
   const isMobile = useMediaQuery("(max-width: 900px)");
   const user = useUser();
   const [fullName, setFullName] = useState();
-  const [activeView, setActiveView] = useState("myProfile");
+  const [activeView, setActiveView] = useState("myOrders");
   const [activeOrders, setActiveOrders] = useState([]);
   const isSameLocalDay = (date1, date2) =>
     new Date(date1).toLocaleDateString() ===
@@ -163,7 +163,7 @@ const CustomerHomePage = () => {
 
             {/* Order History */}
             <Box
-              onClick={() => setActiveView("myProfile")}
+              onClick={() => setActiveView("orderHistory")}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -196,7 +196,7 @@ const CustomerHomePage = () => {
             >
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                 <Avatar sx={{ bgcolor: "#eeeeee" }}>
-                  <Menu />
+                  <RestaurantMenu />
                 </Avatar>
                 <Box>
                   <Typography variant="body1">Menu</Typography>

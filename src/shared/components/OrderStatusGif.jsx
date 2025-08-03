@@ -1,6 +1,7 @@
 // components/OrderStatusGif.jsx
 
 import React from "react";
+import { Box } from "@mui/material";
 import thinkingOrderGif from "../../assets/CustomerHome/thinkingOrderGif.gif";
 import preparing1Gif from "../../assets/CustomerHome/preparing1Gif.gif";
 import preparing2Gif from "../../assets/CustomerHome/preparing2Gif.gif";
@@ -33,15 +34,25 @@ const OrderStatusGif = ({ status, isMobile = false, variant = 0 }) => {
   }
 
   return (
-    <img
-      src={gifSrc}
-      alt="Order Status"
-      style={{
-        maxWidth: "100%",
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         height: isMobile ? "300px" : "400px",
-        objectFit: "contain",
+        width: "100%",
       }}
-    />
+    >
+      <img
+        src={gifSrc}
+        alt="Order Status"
+        style={{
+          maxWidth: "100%",
+          maxHeight: "100%",
+          objectFit: "contain",
+        }}
+      />
+    </Box>
   );
 };
 
