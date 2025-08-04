@@ -95,130 +95,195 @@ const CustomerHomePage = () => {
               display: "flex",
               flexDirection: "column",
               p: 2,
-              mt: 13,
+              mt: 15,
               justifyContent: "center",
             }}
           >
             <Typography
               variant="h3"
-              sx={{ alignSelf: "center", justifySelf: "center" }}
+              sx={{ alignSelf: "center", justifySelf: "center", mb: 7 }}
             >
               Welcome back{fullName ? `, ${fullName}` : ""}!
             </Typography>
-            <Typography variant="h6" fontWeight="bold" mb={2} mt={2}>
-              Your Account
-            </Typography>
 
-            {/* Profile */}
-            <Box
-              onClick={() => setActiveView("myProfile")}
+            <List
               sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                cursor: "pointer",
-                mb: 2,
-                ml: 3,
+                p: 2,
+                width: isMobile ? "100%" : "auto",
+                // maxWidth: "100%",
+                borderRadius: 2,
+                border: "1px solid",
+                borderColor: "divider",
+                backgroundColor: "background.paper",
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Avatar
-                  alt="Profile"
-                  src="/avatar.png" // optional
-                  sx={{ bgcolor: "#fce4ec" }}
-                />
-                <Box>
-                  <Typography variant="body1">Profile</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    View and edit your profile
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
-
-            {/* Active Orders */}
-            <Box
-              onClick={() => setActiveView("myOrders")}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                cursor: "pointer",
-                mb: 2,
-                ml: 3,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Avatar sx={{ bgcolor: "#eeeeee" }}>
-                  <Restore />
-                </Avatar>
-                <Box>
-                  <Typography variant="body1">My Orders</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Check your active/current orders here
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
-
-            {/* Order History */}
-            <Box
-              onClick={() => setActiveView("orderHistory")}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                cursor: "pointer",
-                mb: 2,
-                ml: 3,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Avatar sx={{ bgcolor: "#eeeeee" }}>
-                  <Restore />
-                </Avatar>
-                <Box>
-                  <Typography variant="body1">Order History</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    View your past orders
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                mb: 2,
-                ml: 3,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Avatar sx={{ bgcolor: "#eeeeee" }}>
-                  <RestaurantMenu />
-                </Avatar>
-                <Box>
-                  <Typography variant="body1">Menu</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Click here to check the available menu for today!
-                  </Typography>
-                </Box>
-              </Box>
-              <IconButton
-                onClick={() => navigate("/order-create")}
+              <ListItem
                 sx={{
-                  color: "#ff5722",
+                  backgroundColor: "white",
                   "&:hover": {
                     color: "white",
-                    backgroundColor: "#ff5722",
+                    backgroundImage:
+                      "linear-gradient(90deg, #ff5722 30%, #ff9800 90%)",
                   },
                 }}
               >
-                <ChevronRight />
-              </IconButton>
-            </Box>
-            <Divider />
+                {/* Profile */}
+                <Box
+                  onClick={() => setActiveView("myProfile")}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    cursor: "pointer",
+                    mb: 2,
+                    ml: 2,
+                    mt: 2,
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Avatar
+                      alt="Profile"
+                      src="/avatar.png" // optional
+                      sx={{ bgcolor: "#ff5722" }}
+                    />
+                    <Box>
+                      <Typography variant="body1">Profile</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        View and edit your profile
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  backgroundColor: "white",
+                  "&:hover": {
+                    color: "white",
+                    backgroundImage:
+                      "linear-gradient(90deg, #ff5722 30%, #ff9800 90%)",
+                  },
+                }}
+              >
+                {/* Active Orders */}
+                <Box
+                  onClick={() => setActiveView("myOrders")}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    cursor: "pointer",
+                    mb: 2,
+                    ml: 2,
+                    mt: 2,
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Avatar sx={{ bgcolor: "#ff5722" }}>
+                      <Restore />
+                    </Avatar>
+                    <Box>
+                      <Typography variant="body1">My Orders</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Check your active/current orders here
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  backgroundColor: "white",
+                  "&:hover": {
+                    color: "white",
+                    backgroundImage:
+                      "linear-gradient(90deg, #ff5722 30%, #ff9800 90%)",
+                  },
+                }}
+              >
+                {/* Order History */}
+                <Box
+                  onClick={() => setActiveView("orderHistory")}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    cursor: "pointer",
+                    mb: 2,
+                    ml: 2,
+                    mt: 2,
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Avatar sx={{ bgcolor: "#ff5722" }}>
+                      <Restore />
+                    </Avatar>
+                    <Box>
+                      <Typography variant="body1">Order History</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        View your past orders
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                sx={{
+                  backgroundColor: "white",
+                  "&:hover": {
+                    color: "white",
+                    backgroundImage:
+                      "linear-gradient(90deg, #ff5722 30%, #ff9800 90%)",
+                    "& svg": {
+                      color: "white",
+                      "& .MuiTypography-root": {
+                        color: "white",
+                      },
+                    },
+                  },
+                }}
+              >
+                {/* Menu */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    mb: 2,
+                    ml: 2,
+                    mt: 2,
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Avatar
+                      sx={{
+                        bgcolor: "#ff5722",
+                      }}
+                    >
+                      <RestaurantMenu />
+                    </Avatar>
+                    <Box>
+                      <Typography variant="body1">Menu</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Click here to check the available menu for today!
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <IconButton
+                    onClick={() => navigate("/order-create")}
+                    sx={{
+                      ml: 50,
+                      color: "#ff5722",
+                    }}
+                  >
+                    <ChevronRight />
+                  </IconButton>
+                </Box>
+              </ListItem>
+            </List>
           </Box>
         </Grid>
         <Grid item md={6} xs={12}>
