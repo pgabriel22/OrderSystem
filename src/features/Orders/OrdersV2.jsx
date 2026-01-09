@@ -55,7 +55,7 @@ const OrdersV2 = ({ mode, setMode }) => {
     if (error) {
       console.error("Error fetching orders:", error.message);
     } else {
-      console.log("Fetched orders:", data);
+      // console.log("Fetched orders:", data);
       const mapped = data.map((order) => ({
         ...order,
         customerName: order.customer_name ?? "Unnamed",
@@ -64,6 +64,7 @@ const OrdersV2 = ({ mode, setMode }) => {
           quantity: item.quantity,
           price: item.unit_price,
         })),
+        orderStatus: Number(order.order_status),
         paymentStatus: order.payment_status ? "paid" : "unpaid",
       }));
       setOrders(mapped);
@@ -286,14 +287,15 @@ const OrdersV2 = ({ mode, setMode }) => {
         return `₱${total.toFixed(2)}`;
       },
     },
-    // {
-    //   field: "ordereStatus",
-    //   headerName: "Order Status",
-    //   withd: 100,
-    //   renderCell: (params) => {
-    //     params.row.orderStatus;
-    //   },
-    // },
+    {
+      field: "orderStatus",
+      headerName: "Order Status",
+      width: 100,
+      renderCell: (params) => {
+        const key = Number(params.row.orderStatus);
+        return ORDER_TYPES_LABELS[key] ?? String(params.row.orderStatus ?? "");
+      },
+    },
     {
       field: "paymentStatus",
       headerName: "Payment Status",

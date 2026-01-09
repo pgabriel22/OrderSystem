@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, TextField, Typography, useMediaQuery } from "@mui/material";
 
 const MyProfile = () => {
   const isMobile = useMediaQuery("(max-width: 900px)");
@@ -19,6 +19,11 @@ const MyProfile = () => {
         }}
       >
         <Typography variant="h5">My Profile</Typography>
+
+        <Box>
+          <TextField label="Email"></TextField>
+          <TextField label="Fullname"></TextField>
+        </Box>
       </Box>
     </>
   );

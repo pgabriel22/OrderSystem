@@ -9,7 +9,7 @@ export const ORDER_TYPES_LABELS = {
   [ORDER_TYPES.PREPARING]: "Preparing",
   [ORDER_TYPES.ON_DELIVERY]: "On Delivery",
   [ORDER_TYPES.DELIVERED]: "Delivered",
-  [ORDER_TYPES.CANCELLED]: "Cancelled,",
+  [ORDER_TYPES.CANCELLED]: "Cancelled",
 };
 
 export const ORDER_TYPES_OPTIONS = [

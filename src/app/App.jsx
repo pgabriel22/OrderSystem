@@ -10,6 +10,7 @@ import CustomerHomePage from "../features/Home/CustomerHomePage.jsx";
 import OrderingPage from "../features/Cart/OrderingPage.jsx";
 import OrdersV2 from "../features/Orders/OrdersV2.jsx";
 import AppNavBar from "../shared/components/AppNavBar.jsx";
+import NotFound from "../shared/components/NotFound.jsx";
 
 const App = () => {
   const [mode, setMode] = useState(null);
@@ -88,6 +89,7 @@ const App = () => {
           path="/menu-buildup"
           element={<MenuBuildup mode={mode} setMode={setMode} />}
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
